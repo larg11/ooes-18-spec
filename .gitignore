@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+spec/*.aux
+spec/*.log
+spec/*.out
+spec/*.toc
+spec/*.synctex.gz

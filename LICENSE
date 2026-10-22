@@ -1,0 +1,45 @@
+OOES-18 v1.0.0 - Dual License Notice
+====================================
+
+Copyright (c) 2026 Mohammad Anwaruzzaman
+First Order Technologies SAS (Paris, France - in incorporation)
+ORCID: 0009-0004-5697-7634
+
+This repository is dual-licensed by artifact class.
+
+1. Written specification
+   ----------------------
+   Files: README.md, spec/OOES-18-Specification-v1.0.md,
+          spec/OOES-18-Paper.tex, spec/OOES-18-Paper.pdf
+
+   License: Creative Commons Attribution 4.0 International
+   SPDX-License-Identifier: CC-BY-4.0
+   Canonical text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+   You may share and adapt the written specification for any purpose,
+   including commercially, provided that you give appropriate credit,
+   provide a link to the license, and indicate if changes were made.
+
+2. Schemas, test vectors, reference verifier, and tests
+   -----------------------------------------------------
+   Files: schema/, vectors/, src/, tests/, package.json, tsconfig.json
+
+   License: Apache License, Version 2.0
+   SPDX-License-Identifier: Apache-2.0
+   Canonical text: https://www.apache.org/licenses/LICENSE-2.0
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use these files except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+The open-standard identifier "OOES-18" and the version string "1.0.0"
+may be used to identify implementations that pass the published
+deterministic test vector CASCADE-2026-9F4A2C.

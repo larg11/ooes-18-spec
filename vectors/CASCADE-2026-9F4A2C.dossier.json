@@ -1,0 +1,688 @@
+{
+  "standard": "OOES-18",
+  "version": "1.0.0",
+  "dossier_id": "CASCADE-2026-9F4A2C",
+  "tenant_id": "TENANT-FR-IMPORT-75008",
+  "created_at": "2026-10-20T08:00:00Z",
+  "reference_time": "2026-10-20T12:00:00Z",
+  "hkdf_salt_hex": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+  "slots": {
+    "L1.S01_PURCHASE_ORDER": {
+      "slot_id": "L1.S01_PURCHASE_ORDER",
+      "layer": "L1",
+      "state": "CORROBORATED",
+      "payload": {
+        "po_number": "PO-LEH-2026-10-004418",
+        "buyer_eori": "FR75080234560018",
+        "supplier_id": "SUP-BD-GAZIPUR-4419",
+        "incoterms_2020": "FOB",
+        "currency": "EUR",
+        "total_amount": 144000,
+        "total_units": 12000,
+        "unit_price": 12,
+        "delivery_window_end": "2026-12-05"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "2880b04c08ded56d867328b9982a2429f68ca391f291d931e3b8825f7599b388",
+        "hmac_sha256": "d9e5ccc3585b8d25b5e2fb938a6d5fb2c0eef5b7979f2b0d076d2a358f2e802f",
+        "aes_gcm_iv": "95621ab434232789350bfed9",
+        "aes_gcm_ciphertext": "bfcc713174995e9c572346c278cc3ec43d7639a45f4f6b53b4b5f398586c28385170eeb73d60f5f530f30d70718e7d8049ea59ac5f1eb852a831cd0a9cbbf9942024f95d81bd9d1ea9416d7a060c7496592d1ded203878e18153df6dd38d1dc9f8b481b4e2d765845fcf78a1aed94faec7744009f01230281c9ee248e33685f69481d95db194863d6c4378dea1c73960e81a6ece41f08a288fa8aac41f12ad7b7ee819131105324f3d35f2453a986803c818f4b0dc9cf87d39dcd5912e8c77b6771a573b717278ed6029de7588975e84ac80a94f1dab45dae60abc89268ff3313cb1ac750b2517130d0008eaf03f",
+        "aes_gcm_tag": "2dcd3978e16f52dc783b35bfcdc50685",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "SOVEREIGN_AUTHORITY",
+        "authority_name": "DGFiP Chorus Pro (France)",
+        "accreditation_id": "FR-CHORUS-PRO-REG-75008",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "fbee3d7dee7452dbcca29bd83531c5b8ca01c88929d2abd92995f8df009f71d4"
+      },
+      "fault_codes": []
+    },
+    "L1.S02_TECH_PACK": {
+      "slot_id": "L1.S02_TECH_PACK",
+      "layer": "L1",
+      "state": "CORROBORATED",
+      "payload": {
+        "tech_pack_id": "TP-WWJ-290-2026-07",
+        "sku_code": "WWJ-290-BLK-001",
+        "product_description": "Men's 100% heavy cotton twill workwear jacket, black, 290 GSM",
+        "fiber_composition": "100% Cotton",
+        "gsm_weight": 290,
+        "dimensional_tolerance_pct": 3,
+        "bom_hash": "5b59a2af66c360674646f43e685addb92ab9982987a71e0bc4de1fdd79d252c4"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "69f84e538a91225869efbeb792677e76d453dd47feac59f1b9b4c9218c02de97",
+        "hmac_sha256": "107d9511d8af8a8dbd5182a877f7cd0d888766386e73b79976c2bd352481de5a",
+        "aes_gcm_iv": "354fa3dba5382db72091adb8",
+        "aes_gcm_ciphertext": "896ade00a66db02ebbd44ed63e0e8ac1b33d18005f2460f924b1017c24f627cb7daf18e2fccf9b2bef0afad2f014c5ccd6fd287cdb61caec0ab680c22535f69e46c934a8d8b7e54407fd030a9c5435f954d135ed66267819917d444a6d70261c6be93d26a1fe32cfc882c5b2c47b3104dc3e1bc6982d18df69390f76af69eb7bf410f23b2891d081f902c53cfa2e5e2b7b21d9a6bf780e0e2f401f14bbc1e06b3a816d73fffd38225ba24c5ef7085bbe5930e289acd3d31a6b7711e6fd58c4ab11e3f5a9c92569aa14214ea3c41a6703ef329ae589fcb02abdff634062ca0dd3a7ae8114ba25cd375f705e40ef942aea95fce7450a59a2351674bca56114c37953a97013abb98b1acf51c1b0ef8ae331d6869ef03e841f54200c1696dbcfba8b9b2a5a1b6967fb41b29936830e6379211f03cbfafc7eff",
+        "aes_gcm_tag": "72fad98b0f71d5caa863ae64bd414468",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "QIMA Limited",
+        "accreditation_id": "QIMA-ISO17020-2026-1188",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "b600805e6ac760f8e1184db65d3369c21c4e776b17c9bf3ebaa95dc4f0c728a1"
+      },
+      "fault_codes": []
+    },
+    "L1.S03_GOLDEN_SAMPLE": {
+      "slot_id": "L1.S03_GOLDEN_SAMPLE",
+      "layer": "L1",
+      "state": "CORROBORATED",
+      "payload": {
+        "sample_seal_tag": "GS-BD-4419-2026-0918",
+        "physical_sha256_manifest": "c11c93b064e0ae29020e0aea22a3700260adb765bd0a961999484358631ac0a8",
+        "approved_by_buyer_id": "BUYER-FR-75008",
+        "approved_at": "2026-09-18T14:20:00Z",
+        "colorfastness_baseline": "4-5"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "da4d7d2c9683fadb9dd9247cbb043717eeb8cf2aaaf33f173063977cc89b4d87",
+        "hmac_sha256": "09a29e394db7b42700b983768958f83cbfd2764b1d24e9ef8b2d12bc143acf34",
+        "aes_gcm_iv": "e230ebfbd859b8deeba9d625",
+        "aes_gcm_ciphertext": "1fd9a9eca3c45d86ac7c0db9ec03283fa3f1bd24651d89c5a12d01a2dd1dca885b11560d27ea0b9250ed17f2c091d08a03fc7a41a9c3f66cfd95260d6635d32d1c4ca31926e548a968e1d3e43c85aeba74a391c18605b0cf9c942fa2062db25d8962a565f166fa942515eb6bca3979d842e568deb9bcf6e98cb9848965a462631f366bc487e29ca19e7f6f1955d10761fef0e27882b1488141b402308c90edaf7db3b1037f901cbab7490d322bb36ce01028e2eee19c3beef1d07e106197cdb2a986884e0c97f0eb8d6fdbed9050fb215277b20843fae67a2c93b823c0ed533cc77b1259d52e175e07dd7d1806414851760cec16",
+        "aes_gcm_tag": "16bfa897b9c6198135614c9c728e8ced",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "SGS Bangladesh Ltd",
+        "accreditation_id": "SGS-17020-BD-0042",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "ad9cbd9c3332d4c5f808f9ac5c154797bef0f421ee1279b8e82232113b79a240"
+      },
+      "fault_codes": []
+    },
+    "L2.S04_SUPPLIER_KYB": {
+      "slot_id": "L2.S04_SUPPLIER_KYB",
+      "layer": "L2",
+      "state": "CORROBORATED",
+      "payload": {
+        "legal_name": "Dhaka Apparels & Workwear Ltd.",
+        "tax_registration_id": "BD-BIN-004918273-0101",
+        "country_iso2": "BD",
+        "factory_lat": 23.9999,
+        "factory_lon": 90.4203,
+        "beneficial_owners_verified": true
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "b14c21cb13d00e710e4ad8411019114554474a8b1521d16115e7b405f092b44a",
+        "hmac_sha256": "07fc0069e74caa97126d13cc6bee2cc5df4409dc584ccd492451d44523bb22ae",
+        "aes_gcm_iv": "cbe6d2b29ac5db20d3d8f4a2",
+        "aes_gcm_ciphertext": "fd5169b0b13ab89177afbbc22c4f11e3f9c955e2eda5d57b592711e7a1d107c3f205ae71486150ca5e9f9b7f8aaf250e05c4b5af6f68b7869d69a551e4f93d41386d9233c56df6cc4c54bbd9d78f7c041ddb86c50c17398f30b743b6c02d1291299171dd0907a750d7641ad78a448b1e92b33ad064867f98a9632025abde3df31803ced285723dafcdae6839509cdf3d8c2403320f39d439cd108f7955d8ced71f523f306597b1262127f31be07bf6eb01f0eb33d50535e6a1572e222c3c52",
+        "aes_gcm_tag": "73f95260802c284b889bae6fd35c6216",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "SOVEREIGN_AUTHORITY",
+        "authority_name": "Bangladesh RJSC / NBR",
+        "accreditation_id": "BD-RJSC-REG-4419",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "85311621de6d4f9023565defa84e279f78368766532a75e826963238f447d756"
+      },
+      "fault_codes": []
+    },
+    "L2.S05_REGISTRY_STANDING": {
+      "slot_id": "L2.S05_REGISTRY_STANDING",
+      "layer": "L2",
+      "state": "ASSERTED",
+      "payload": {
+        "registry_authority": "BGMEA",
+        "membership_id": "BGMEA-4419",
+        "rex_number": "BDREX882190",
+        "eu_2024_3015_screening_status": "CLEAR",
+        "sanctions_clear": true
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "16e65e29501b3aac3982b7f35865bfb544623325d35662411231fb38b63738f5",
+        "hmac_sha256": "b8f36c9c53baf27d5e2b4195b512d270e8cc871d9cd80b068876eb8d0ca802f9",
+        "aes_gcm_iv": "114bcd35b82aca66b552fd65",
+        "aes_gcm_ciphertext": "fa3d78ad576e5fd279d4932065365482c7f0f5fc61d6a679a4cbadaac34f51bdea2aeae31303b0ba91214f444888ae616643f88ee7734938c5ddfcd5ce6d1ec5aa39784f90f9c4a1698bcb8d0698733fcada890b1025320ec89a0797b90be63da8381adf811e35483e5f3ce51adf0c9d0c10165cfd1ea110ead303fd66cb0b189ecdfadb163fba57fd73b22bb16f75169329c92c0f",
+        "aes_gcm_tag": "d5b83e4d28a4a845304b87fe4bfdd2ea",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "PARTY_SELF_DECLARATION",
+        "authority_name": "Exporter self-declaration (signature verified at upload)",
+        "accreditation_id": null,
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "f8a0bbfceba7d82b9e2eb4bf768ca27461bcae0bac931711a850f57f56ca93eb"
+      },
+      "fault_codes": []
+    },
+    "L2.S06_CAPACITY_ATTESTATION": {
+      "slot_id": "L2.S06_CAPACITY_ATTESTATION",
+      "layer": "L2",
+      "state": "ASSERTED",
+      "payload": {
+        "allocated_lines": 4,
+        "daily_output_capacity_units": 850,
+        "subcontracting_authorized": false,
+        "tier2_mill_tax_ids": [
+          "BD-BIN-009127364-0202",
+          "BD-BIN-007731095-0303"
+        ]
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "63eabc3eb940c650c8d998998e649464e4684f85438097d4f399ecaa14722df9",
+        "hmac_sha256": "389169d5494fbc3efe4ed7c2ce9b3e49e1eb3ed15fbf48a5f45bc269a3ec844d",
+        "aes_gcm_iv": "71874eba2e30951da2944fe0",
+        "aes_gcm_ciphertext": "bc78f32dbf8bf0ca76ec1a95dcc6647d5ffb578782c046067115da143e590aa9377ef4671c0d3035599bc670a5e9e8277b0545465b8cdb96f88f5ea538696099851903ddc4ddd20fe6171cf28568ba7dfccc20bcb1709d6077b3b27b64339ff55e4d8c191b38fac48e0991922a6a4c7459e1afcd0b54a6d47c671ce6c74c9b7b78487a19ea29b5c8f9311c3c112a132f0abbe91b61dd5d4fd833d5c2c6220c01",
+        "aes_gcm_tag": "89bd158abfb1095eb2848c9464c99f0f",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "PARTY_SELF_DECLARATION",
+        "authority_name": "Exporter self-declaration (signature verified at upload)",
+        "accreditation_id": null,
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "12f35154f9379f00470ab56f5671134841efd14fd30b37283047b75ee0a99b4f"
+      },
+      "fault_codes": []
+    },
+    "L3.S07_PRODUCTION_PHOTOS": {
+      "slot_id": "L3.S07_PRODUCTION_PHOTOS",
+      "layer": "L3",
+      "state": "CORROBORATED",
+      "payload": {
+        "media_count": 42,
+        "capture_device_pubkey_fp": "62321516abbb18ab7e21f7fa21aa85db4d50678d84145737e93c9b2741600006",
+        "exif_gps_lat": 24.0005,
+        "exif_gps_lon": 90.4208,
+        "max_distance_from_s04_meters": 82.4,
+        "merkle_media_root": "992052d9b6799fe7dac9b570d5744c49136d2f34f2b51b2440fbf5114e47da01"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "a8d3cb32aa4a9bcd4ece8216ceecc88cc5c65616c4ed59fbf8203e566e8b4e85",
+        "hmac_sha256": "bc305dd9a50ea5a9d3d518daf63f20eccfedafe8833440997d9097747b3a6be5",
+        "aes_gcm_iv": "324591ffdeb22a917375c682",
+        "aes_gcm_ciphertext": "912d0284b299339b0307962a49aa26642021867210b89ba01e991262f15e1029c89750156b7aae3262a108a456a1955bb93976332438143e31c030563b15b6edfaf351139a1fb166062545480e6212811377b73fe3c26a030f1ddb87657b93ed0fa1f3177275f3687b5bdcf98e9f5970c1dccbed49e4bd96a94261d9d3b60871b678923b67c18b8d60d02bb73dd5823d8f52aca561925095b995b4c6212924320c636832e271291b3116e30f1790ecf5e6fd7b7b14d1048fc7548bb87c42635a78d08563dacddd1d69fadd3c639ae2a3ea73acfcef8c63ac155ee346aa336300ecbd08277a6be704498adb0f68009941f3d18081bc0eb88e96cce318bd30ce5599cb4bf8adbc10883309f432de7e5696b572a8848de0b3575b",
+        "aes_gcm_tag": "cae016306c79817ab4066c2bea0cdff6",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "SGS Bangladesh Ltd",
+        "accreditation_id": "SGS-17020-BD-0042",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "ec1a800ac31edc84f877e7a5373237fc0509f09c267a62f86218845d804b154a"
+      },
+      "fault_codes": []
+    },
+    "L3.S08_INLINE_AQL": {
+      "slot_id": "L3.S08_INLINE_AQL",
+      "layer": "L3",
+      "state": "CORROBORATED",
+      "payload": {
+        "inspector_agency": "SGS Bangladesh Ltd",
+        "iso17020_accreditation_id": "SGS-17020-BD-0042",
+        "aql_standard": "ISO_2859_1_AQL_2_5",
+        "sample_size": 315,
+        "critical_defects": 0,
+        "major_defects": 4,
+        "max_allowed_major": 14,
+        "result": "PASS"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "b8cd18acd905c3fb6472162ca6257b44f4862f80944e1f8b33bf1c349bc82501",
+        "hmac_sha256": "de748e7808f850194c87bcec0215c0a5cf0cb824d703e4daad4739def49c2588",
+        "aes_gcm_iv": "fc81aa12f5c0d7dc2e67c2a1",
+        "aes_gcm_ciphertext": "94902837d342dd8262ef9f66f75e9daf8fbe8e05a6f2c4ce0b271518cf79aa61e23b0cf7795126f1302502c9218babb14888423a207d78f0e3cc5af8121367da07364b0e1fd68d9116fbda05f0d11e9ea57c270e15bfc798b9b93e5d2cfbd25c5eb0d026412ed136dfaa53309b9fb32f37f550eb7b3b705474ca48a2e52dbb0b514d88bcb5e00ffb55057e30c83d08265971a84de0850cde4a1728009e9a0e0cc6224eef161b9f43ca06ca165cb1041553512ce1586052c088bfb559a09f4789462865646377bba0d6a7bef36f681d629e6e245b7e3fa331d002cc60bc",
+        "aes_gcm_tag": "691a411e4b052af3736c8d9e6195ae5c",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "SGS Bangladesh Ltd",
+        "accreditation_id": "SGS-17020-BD-0042",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "741f704755d1250b83ab2fdeb349869bf0c0e5949a96eaf0859edd67f297c9ea"
+      },
+      "fault_codes": []
+    },
+    "L3.S09_LAB_CERTIFICATE": {
+      "slot_id": "L3.S09_LAB_CERTIFICATE",
+      "layer": "L3",
+      "state": "CORROBORATED",
+      "payload": {
+        "lab_name": "Bureau Veritas CPS Dhaka",
+        "iso17025_accreditation_id": "BV-ISO17025-BD-0427",
+        "report_number": "BV-CPS-2026-10-88419",
+        "reach_annex_xvii_compliant": true,
+        "azo_dyes_ppm": 4.2,
+        "measured_cotton_pct": 99.4,
+        "espr_dpp_uid": "DPP-BD-6203321000-2026-0004419"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "3a78beaab1ebb495c565db715799123811ade905ca70335105b5f21670bd7485",
+        "hmac_sha256": "a33fb9cc2bdea5fcaf380b9f842aaef7df7ce2be1e2066d59c7c67b6830f2037",
+        "aes_gcm_iv": "1202659e99bee416c80dd966",
+        "aes_gcm_ciphertext": "de6b9c6082416060997ef05aa27ff535464f02374e005138212f965e5b47da9d01a9f490694c5e01ee4bb6460c566144a4337ff3fde6832e5609d393ed7c4849184b2bbeee9e83937ae4b7d0c745e6a894eba8cab38eae1c49a7454d2748138b9842a8cf34d70ac49c7317fe54dc675ce9038016002bab4b661971a56080060329332f4b1ec1ca49636a47b61c90190f2659d58f31de40ac5a3fb0d806cac5c11f29d48427055eaa0b5e240bf43cdb9531a2871bbb565b55eee33e484405654fcee5acb74c4cd8f015bf19de42dde27229edd74656ebd6389ce4c290d61e10351045de6a588c4180e34026a97f9354c6113b7ec21dc86dfb792816a4898e0467",
+        "aes_gcm_tag": "81f7c9b7b26156471f28833a86e7f0ae",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "Bureau Veritas CPS Dhaka",
+        "accreditation_id": "BV-ISO17025-BD-0427",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "b7ad6a0a315637c6754fa37f61775b53d0799dbf9dd3526c0cb95528a6a220c9"
+      },
+      "fault_codes": []
+    },
+    "L4.S10_BOLT_SEAL": {
+      "slot_id": "L4.S10_BOLT_SEAL",
+      "layer": "L4",
+      "state": "CORROBORATED",
+      "payload": {
+        "seal_serial_number": "SL-BD-994812",
+        "iso17712_clause_6_compliant": true,
+        "container_number": "MSCU5829104",
+        "stuffing_lat": 22.3053,
+        "stuffing_lon": 91.8002,
+        "sealed_at": "2026-10-17T16:40:00Z"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "07d9b2a7a9fca62c346f7539ddb3c369d32f8bd2e83f3ecb8acb1482bf0bd082",
+        "hmac_sha256": "1cda9f4d18de1c973a468de15d997819ea7fe7e00c1db2d43df99231b624f5b6",
+        "aes_gcm_iv": "4640bf5226a3643621816569",
+        "aes_gcm_ciphertext": "5c170ee8ecfa3c7a4e3f88ebfcc6b9239820fd215cbdaf5ef68727807add49dc5daed0cb3a6ba1ea40cab1c62aba227d024d451f66a98aafc61ceb68b21cd300c01afb2d35408db456768ebb6763ff905e8fa64b8d53595f3c9e80f0e5842586401443e47522d7f0a00e870e5d8c24f1a10dea2e43d12c88420950de4725c7638ff8735315b1f90857460b1bb8bcf26c3eb003bd2fb46da641c429aa887334010fe13150ffcdec43a16da85bdedaf29d03e3b61aca8d9593fe78",
+        "aes_gcm_tag": "8ecdcc750b46170863ab2f3854b60465",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "ACCREDITED_THIRD_PARTY",
+        "authority_name": "SGS Bangladesh Ltd",
+        "accreditation_id": "SGS-ISO17712-BD-0042",
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "2efde7df2380b102b36599ce6e7ca169427a79e3c565aed9144a7d9da3304083"
+      },
+      "fault_codes": []
+    },
+    "L4.S11_BILL_OF_LADING": {
+      "slot_id": "L4.S11_BILL_OF_LADING",
+      "layer": "L4",
+      "state": "ASSERTED",
+      "payload": {
+        "bl_number": "MAEU260984112",
+        "scac_code": "MAEU",
+        "vessel_name": "MSC ISABELLA",
+        "vessel_imo": "9776432",
+        "port_of_loading_unlocode": "BDCGP",
+        "port_of_discharge_unlocode": "FRLEH",
+        "container_number": "MSCU5829104",
+        "shipped_on_board_date": "2026-10-18",
+        "gross_weight_kg": 6480,
+        "carton_count": 480,
+        "clean_on_board": true
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "a33c8a1c25158b357c767618d20fdf2b4019698f599f8913a75471c37cc5c7c9",
+        "hmac_sha256": "89c1eccacb8ce601ae5c03cc16da6b2401e888aeddb654c4f8b20374b509b5b4",
+        "aes_gcm_iv": "eb648cc07f9593c787fa4f6e",
+        "aes_gcm_ciphertext": "d3469d3d91870f7214b42c5ecbf9ad6c33868a19e563879eb0f25b1974371f26397ff0151b6b660976f67d9cabeb4c884e20a0c5165a59fbf715db0d7f136cba343f378e03aa76840fcd6f3079998cf7ae76c17e55f061bd716c07adbf87f7b5df4007f1518978c51bab31de23f59d7dca381b465ea6f0160f11aacbc9bda98f1cdc2bfa28b80ab1d7ba81fe5986b0a21791b208e6fea5a1ba6dc0beb7a506966b61806123235e64348efd1e07b57cce182d8d061e76386759b91e5cd3552bf5832a886ea07b0e6f152652d552b8e232b330f610e265afe130c8e4370f8ef169be52e3b4b44beb04ef43b6f6630a265e83c05bcbe3321164c32050870c4e367ab65407cedb20d5711c20c79f7aa1fb1501c04035fb06be6dd51cc540aac9793d21b91214638d65f65ad1405fe7d69aa14c38",
+        "aes_gcm_tag": "674516706b6c1054b8689e8a7599d9c2",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "PARTY_SELF_DECLARATION",
+        "authority_name": "Exporter self-declaration (signature verified at upload)",
+        "accreditation_id": null,
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "e8df407d8d5d485b7d45ad6eb57b4bd2ea1d782a3f7002a4a8137298e87d4ebd"
+      },
+      "fault_codes": []
+    },
+    "L4.S12_CERTIFICATE_OF_ORIGIN": {
+      "slot_id": "L4.S12_CERTIFICATE_OF_ORIGIN",
+      "layer": "L4",
+      "state": "ASSERTED",
+      "payload": {
+        "coo_number": "COO-BD-2026-88419",
+        "issuing_authority": "Chittagong Chamber of Commerce & Industry",
+        "origin_criterion": "WO",
+        "country_of_origin_iso2": "BD",
+        "exporter_rex_id": "BDREX882190",
+        "tier2_yarn_origin_iso2": "IN",
+        "tier3_raw_material_origin_iso2": "US"
+      },
+      "seal": {
+        "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+        "jcs_sha256": "f5a1a08d6771203158aa7ad24150e4985e19c1fb6e064d8d2aea596c9e5872d7",
+        "hmac_sha256": "15ecf3d27c6a30bd9333675e840d33b7ee4cf6c147b168592bf37edfe180d6c5",
+        "aes_gcm_iv": "ebda73a558c3ffb30c55af9f",
+        "aes_gcm_ciphertext": "c5823e5c53d6ba5024a215cd6e4e5f35a22620b6da877a30851c3dfa76acb62207f5558fbc531ef3096b5df1aab1a4705cab25bbe4c974fa85bae421bf2b9bded4d79a4beadf64995c150a02afa86a6c3d27d907f488da2c0bd35ef5cc953ed7c86b852d92ebde77edf9fc84dae3f022e374758934b6125868b092ddaa20c05291b9115d4615e16dda1efc14902800820ca20975881a0cfa82353a445c95d42d30ea5183cace6ea5acee209c5d06a183faac1fb3e91cc0cec5b3d5eb29acddfaa43fe6c02e0e91aee096c96170f6bd0738fcfa8fe8fe9cf357f7d5cfa9d991fa674d2be0f535225c485db5852ecef0f7e7806ae265da8da8fd836cff",
+        "aes_gcm_tag": "e2ba8ebbf85625308a4c70aa06fb086f",
+        "sealed_at": "2026-10-20T10:00:00Z"
+      },
+      "attestation": {
+        "attester_type": "PARTY_SELF_DECLARATION",
+        "authority_name": "Exporter self-declaration (signature verified at upload)",
+        "accreditation_id": null,
+        "attested_at": "2026-10-19T09:30:00Z",
+        "expires_at": "2027-12-31T23:59:59Z",
+        "signature_hex": "f704f81ba3a392a46c268146abf9ba082448d26b247488c6549b1dfac1a01136"
+      },
+      "fault_codes": []
+    },
+    "L4.S13_SETTLEMENT_INSTRUMENT": {
+      "slot_id": "L4.S13_SETTLEMENT_INSTRUMENT",
+      "layer": "L4",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    },
+    "L5.S14_LANDED_VALUATION": {
+      "slot_id": "L5.S14_LANDED_VALUATION",
+      "layer": "L5",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    },
+    "L5.S15_DUTY_CALCULATION": {
+      "slot_id": "L5.S15_DUTY_CALCULATION",
+      "layer": "L5",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    },
+    "L5.S16_PSI_REPORT": {
+      "slot_id": "L5.S16_PSI_REPORT",
+      "layer": "L5",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    },
+    "L5.S17_GPS_TELEMETRY": {
+      "slot_id": "L5.S17_GPS_TELEMETRY",
+      "layer": "L5",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    },
+    "L5.S18_AUDIT_SIGNATURE": {
+      "slot_id": "L5.S18_AUDIT_SIGNATURE",
+      "layer": "L5",
+      "state": "UNKNOWN",
+      "payload": null,
+      "seal": null,
+      "attestation": null,
+      "fault_codes": []
+    }
+  },
+  "blind_index": {
+    "normalized_tuple": "MAEU260984112|MSCU5829104|BDBIN0049182730101|2026-10-12",
+    "blind_index_hex": "c1d26a183bd01045931d072f8832624a5d31e5a36c768c276d5425d0907ba4d5",
+    "registry_salt_id": "OOES-18-NETWORK-REGISTRY-2026-Q4"
+  },
+  "dossier_state_root": "a426317f4ddc9f4ca7a86e36baa2c53099abbc600af6fa9635ee9b2ce5473321",
+  "slot_digests_map_hash": "7fe335b525f0a87a13d248ff8c8f3caddb55ae9dd0ad303389c8a8338aa87405",
+  "institutional_views": {
+    "pre_wire_gate": {
+      "gate_id": "GATE_01_DEPOSIT_PRE_WIRE",
+      "verdict": "HARD_STOP",
+      "advance_amount_eur": 43200,
+      "currency": "EUR",
+      "mandatory_slots": [
+        "L1.S01_PURCHASE_ORDER",
+        "L1.S02_TECH_PACK",
+        "L1.S03_GOLDEN_SAMPLE",
+        "L2.S04_SUPPLIER_KYB",
+        "L2.S05_REGISTRY_STANDING",
+        "L2.S06_CAPACITY_ATTESTATION"
+      ],
+      "uncorroborated_slots": [
+        "L2.S05_REGISTRY_STANDING",
+        "L2.S06_CAPACITY_ATTESTATION"
+      ],
+      "halt_reasons": [
+        {
+          "code": "ERR_SLOT_ASSERTED",
+          "slot_id": "L2.S05_REGISTRY_STANDING",
+          "detail": "Slot is self-declared and lacks independent third-party corroboration."
+        },
+        {
+          "code": "ERR_SLOT_ASSERTED",
+          "slot_id": "L2.S06_CAPACITY_ATTESTATION",
+          "detail": "Slot is self-declared and lacks independent third-party corroboration."
+        }
+      ],
+      "generated_at": "2026-10-20T12:00:00Z"
+    },
+    "lc_mt700_check": {
+      "profile": "UCP_600_ISBP_821",
+      "overall": "INCOMPLETE",
+      "checks": [
+        {
+          "reference": "UCP 600 Art. 14(d)",
+          "requirement": "Data in a document, when read in context, must not conflict with data in any other stipulated document.",
+          "source_slots": [
+            "L4.S10_BOLT_SEAL",
+            "L4.S11_BILL_OF_LADING",
+            "L4.S12_CERTIFICATE_OF_ORIGIN",
+            "L2.S04_SUPPLIER_KYB",
+            "L2.S05_REGISTRY_STANDING"
+          ],
+          "status": "PASS",
+          "detail": "Container, origin, and REX identifier data are mutually non-contradictory."
+        },
+        {
+          "reference": "UCP 600 Art. 18 / ISBP 821 Para. C1",
+          "requirement": "A commercial invoice must appear on its face to have been issued by the beneficiary and be made out in the currency of the credit.",
+          "source_slots": [
+            "L1.S01_PURCHASE_ORDER",
+            "L5.S14_LANDED_VALUATION"
+          ],
+          "status": "NOT_EVALUATED",
+          "detail": "Commercial invoice valuation slot L5.S14 is not corroborated."
+        },
+        {
+          "reference": "UCP 600 Art. 20 / ISBP 821 Para. E1",
+          "requirement": "A bill of lading must indicate goods have been shipped on board a named vessel and be clean.",
+          "source_slots": [
+            "L4.S10_BOLT_SEAL",
+            "L4.S11_BILL_OF_LADING"
+          ],
+          "status": "PASS",
+          "detail": "Container continuity holds and the transport document is clean on board."
+        },
+        {
+          "reference": "UCP 600 Art. 27",
+          "requirement": "A transport document must not bear a clause declaring a defective condition of the goods or packaging.",
+          "source_slots": [
+            "L4.S11_BILL_OF_LADING"
+          ],
+          "status": "PASS",
+          "detail": "Bill of lading is marked clean on board under UCP 600 Art. 27."
+        },
+        {
+          "reference": "UCP 600 Art. 30",
+          "requirement": "A tolerance not exceeding 5% above or below the quantity stated is permissible when the credit does not stipulate a quantity in packing units or individual items.",
+          "source_slots": [
+            "L1.S01_PURCHASE_ORDER",
+            "L5.S16_PSI_REPORT"
+          ],
+          "status": "NOT_EVALUATED",
+          "detail": "Pre-shipment inspection report L5.S16 is not corroborated."
+        },
+        {
+          "reference": "ISBP 821 Para. L1",
+          "requirement": "A certificate of origin must be consistent with the invoice and the transport document as to origin and consignee data.",
+          "source_slots": [
+            "L2.S04_SUPPLIER_KYB",
+            "L2.S05_REGISTRY_STANDING",
+            "L4.S12_CERTIFICATE_OF_ORIGIN"
+          ],
+          "status": "PASS",
+          "detail": "Origin country and exporter REX identifier are consistent across documents."
+        },
+        {
+          "reference": "ISBP 821 Para. K1",
+          "requirement": "Insurance and freight charges added to the FOB value must be separately identifiable for CIF customs valuation.",
+          "source_slots": [
+            "L5.S14_LANDED_VALUATION"
+          ],
+          "status": "NOT_EVALUATED",
+          "detail": "Landed valuation slot is not corroborated."
+        }
+      ],
+      "generated_at": "2026-10-20T12:00:00Z"
+    },
+    "delta_ie_h1_pack": {
+      "declaration_type": "H1",
+      "entry_process": "DELTA_IE_VOLET_IMPORT_H1",
+      "overall": "INCOMPLETE",
+      "data_elements": [
+        {
+          "de": "DE 11 01",
+          "name": "Declaration type (H1 release for free circulation)",
+          "source_slots": [
+            "L5.S15_DUTY_CALCULATION"
+          ],
+          "status": "MISSING",
+          "values": {
+            "declaration_type": "H1",
+            "taric_10_code": null,
+            "preference_code": null
+          }
+        },
+        {
+          "de": "DE 12 03",
+          "name": "Supporting documents (N380 invoice, N705 B/L, U164/N865 origin, ISO 17025 lab, forced-labour attestation)",
+          "source_slots": [
+            "L1.S01_PURCHASE_ORDER",
+            "L3.S09_LAB_CERTIFICATE",
+            "L4.S11_BILL_OF_LADING",
+            "L4.S12_CERTIFICATE_OF_ORIGIN",
+            "L5.S14_LANDED_VALUATION"
+          ],
+          "status": "PENDING",
+          "values": {
+            "invoice_number": null,
+            "bill_of_lading": "MAEU260984112",
+            "lab_report_number": "BV-CPS-2026-10-88419",
+            "origin_certificate": "COO-BD-2026-88419"
+          }
+        },
+        {
+          "de": "DE 13 01",
+          "name": "Exporter identity and address",
+          "source_slots": [
+            "L2.S04_SUPPLIER_KYB"
+          ],
+          "status": "COMPLETE",
+          "values": {
+            "legal_name": "Dhaka Apparels & Workwear Ltd.",
+            "tax_registration_id": "BD-BIN-004918273-0101",
+            "country_iso2": "BD"
+          }
+        },
+        {
+          "de": "DE 13 04",
+          "name": "Importer EORI",
+          "source_slots": [
+            "L1.S01_PURCHASE_ORDER"
+          ],
+          "status": "COMPLETE",
+          "values": {
+            "buyer_eori": "FR75080234560018"
+          }
+        },
+        {
+          "de": "DE 14 03",
+          "name": "Customs value and Incoterms addition/deduction breakdown",
+          "source_slots": [
+            "L5.S14_LANDED_VALUATION"
+          ],
+          "status": "MISSING",
+          "values": {
+            "fob_value_eur": null,
+            "international_freight_eur": null,
+            "insurance_eur": null,
+            "cif_customs_value_eur": null,
+            "valuation_method": null
+          }
+        },
+        {
+          "de": "DE 16 08 / 16 09",
+          "name": "Country of non-preferential and preferential origin",
+          "source_slots": [
+            "L4.S12_CERTIFICATE_OF_ORIGIN"
+          ],
+          "status": "PENDING",
+          "values": {
+            "country_of_origin_iso2": "BD",
+            "origin_criterion": "WO",
+            "exporter_rex_id": "BDREX882190"
+          }
+        },
+        {
+          "de": "DE 18 09",
+          "name": "Commodity code (10-digit EU TARIC)",
+          "source_slots": [
+            "L5.S15_DUTY_CALCULATION"
+          ],
+          "status": "MISSING",
+          "values": {
+            "taric_10_code": null,
+            "mfn_duty_rate_pct": null,
+            "preferential_duty_rate_pct": null,
+            "calculated_duty_eur": null,
+            "calculated_vat_eur": null
+          }
+        },
+        {
+          "de": "DE 19 01 / 19 07",
+          "name": "Container identification and ISO 17712 seal number",
+          "source_slots": [
+            "L4.S10_BOLT_SEAL",
+            "L4.S11_BILL_OF_LADING"
+          ],
+          "status": "PENDING",
+          "values": {
+            "container_number": "MSCU5829104",
+            "seal_serial_number": "SL-BD-994812",
+            "iso17712_clause_6_compliant": true
+          }
+        }
+      ],
+      "generated_at": "2026-10-20T12:00:00Z"
+    }
+  }
+}

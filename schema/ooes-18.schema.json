@@ -1,0 +1,1191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ooes-18.org/schema/ooes-18.schema.json",
+  "title": "OOES-18 Open Origin Evidence Schema v1.0.0",
+  "description": "Canonical OOES18Dossier document for deterministic pre-clearance evidence under EU Regulation 2024/3015, UCP 600, and French DELTA IE Volet Import (H1).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "standard",
+    "version",
+    "dossier_id",
+    "tenant_id",
+    "created_at",
+    "reference_time",
+    "hkdf_salt_hex",
+    "slots",
+    "blind_index",
+    "dossier_state_root",
+    "slot_digests_map_hash",
+    "institutional_views"
+  ],
+  "properties": {
+    "standard": {
+      "const": "OOES-18"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "dossier_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9][A-Z0-9-]{2,63}$"
+    },
+    "tenant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reference_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "hkdf_salt_hex": {
+      "$ref": "#/$defs/Hex16Bytes"
+    },
+    "slots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "L1.S01_PURCHASE_ORDER",
+        "L1.S02_TECH_PACK",
+        "L1.S03_GOLDEN_SAMPLE",
+        "L2.S04_SUPPLIER_KYB",
+        "L2.S05_REGISTRY_STANDING",
+        "L2.S06_CAPACITY_ATTESTATION",
+        "L3.S07_PRODUCTION_PHOTOS",
+        "L3.S08_INLINE_AQL",
+        "L3.S09_LAB_CERTIFICATE",
+        "L4.S10_BOLT_SEAL",
+        "L4.S11_BILL_OF_LADING",
+        "L4.S12_CERTIFICATE_OF_ORIGIN",
+        "L4.S13_SETTLEMENT_INSTRUMENT",
+        "L5.S14_LANDED_VALUATION",
+        "L5.S15_DUTY_CALCULATION",
+        "L5.S16_PSI_REPORT",
+        "L5.S17_GPS_TELEMETRY",
+        "L5.S18_AUDIT_SIGNATURE"
+      ],
+      "properties": {
+        "L1.S01_PURCHASE_ORDER": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L1.S01_PURCHASE_ORDER" },
+                "layer": { "const": "L1" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL1S01" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L1.S02_TECH_PACK": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L1.S02_TECH_PACK" },
+                "layer": { "const": "L1" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL1S02" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L1.S03_GOLDEN_SAMPLE": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L1.S03_GOLDEN_SAMPLE" },
+                "layer": { "const": "L1" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL1S03" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L2.S04_SUPPLIER_KYB": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L2.S04_SUPPLIER_KYB" },
+                "layer": { "const": "L2" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL2S04" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L2.S05_REGISTRY_STANDING": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L2.S05_REGISTRY_STANDING" },
+                "layer": { "const": "L2" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL2S05" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L2.S06_CAPACITY_ATTESTATION": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L2.S06_CAPACITY_ATTESTATION" },
+                "layer": { "const": "L2" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL2S06" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L3.S07_PRODUCTION_PHOTOS": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L3.S07_PRODUCTION_PHOTOS" },
+                "layer": { "const": "L3" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL3S07" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L3.S08_INLINE_AQL": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L3.S08_INLINE_AQL" },
+                "layer": { "const": "L3" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL3S08" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L3.S09_LAB_CERTIFICATE": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L3.S09_LAB_CERTIFICATE" },
+                "layer": { "const": "L3" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL3S09" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L4.S10_BOLT_SEAL": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L4.S10_BOLT_SEAL" },
+                "layer": { "const": "L4" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL4S10" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L4.S11_BILL_OF_LADING": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L4.S11_BILL_OF_LADING" },
+                "layer": { "const": "L4" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL4S11" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L4.S12_CERTIFICATE_OF_ORIGIN": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L4.S12_CERTIFICATE_OF_ORIGIN" },
+                "layer": { "const": "L4" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL4S12" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L4.S13_SETTLEMENT_INSTRUMENT": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L4.S13_SETTLEMENT_INSTRUMENT" },
+                "layer": { "const": "L4" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL4S13" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L5.S14_LANDED_VALUATION": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L5.S14_LANDED_VALUATION" },
+                "layer": { "const": "L5" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL5S14" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L5.S15_DUTY_CALCULATION": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L5.S15_DUTY_CALCULATION" },
+                "layer": { "const": "L5" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL5S15" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L5.S16_PSI_REPORT": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L5.S16_PSI_REPORT" },
+                "layer": { "const": "L5" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL5S16" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L5.S17_GPS_TELEMETRY": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L5.S17_GPS_TELEMETRY" },
+                "layer": { "const": "L5" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL5S17" }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "L5.S18_AUDIT_SIGNATURE": {
+          "allOf": [
+            { "$ref": "#/$defs/SlotEnvelopeBase" },
+            {
+              "type": "object",
+              "properties": {
+                "slot_id": { "const": "L5.S18_AUDIT_SIGNATURE" },
+                "layer": { "const": "L5" },
+                "payload": {
+                  "oneOf": [
+                    { "type": "null" },
+                    { "$ref": "#/$defs/PayloadL5S18" }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "blind_index": {
+      "$ref": "#/$defs/BlindIndex"
+    },
+    "dossier_state_root": {
+      "$ref": "#/$defs/Sha256Hex"
+    },
+    "slot_digests_map_hash": {
+      "$ref": "#/$defs/Sha256Hex"
+    },
+    "institutional_views": {
+      "$ref": "#/$defs/InstitutionalViews"
+    }
+  },
+  "$defs": {
+    "Sha256Hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Hex16Bytes": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "Hex12Bytes": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{24}$"
+    },
+    "Hex16ByteTag": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "EpistemicState": {
+      "type": "string",
+      "enum": ["UNKNOWN", "ASSERTED", "CORROBORATED"]
+    },
+    "CryptographicSeal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hkdf_salt",
+        "jcs_sha256",
+        "hmac_sha256",
+        "aes_gcm_iv",
+        "aes_gcm_ciphertext",
+        "aes_gcm_tag",
+        "sealed_at"
+      ],
+      "properties": {
+        "hkdf_salt": {
+          "$ref": "#/$defs/Hex16Bytes"
+        },
+        "jcs_sha256": {
+          "$ref": "#/$defs/Sha256Hex"
+        },
+        "hmac_sha256": {
+          "$ref": "#/$defs/Sha256Hex"
+        },
+        "aes_gcm_iv": {
+          "$ref": "#/$defs/Hex12Bytes"
+        },
+        "aes_gcm_ciphertext": {
+          "type": "string",
+          "pattern": "^([0-9a-f]{2})+$"
+        },
+        "aes_gcm_tag": {
+          "$ref": "#/$defs/Hex16ByteTag"
+        },
+        "sealed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AttestationMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attester_type",
+        "authority_name",
+        "accreditation_id",
+        "attested_at",
+        "expires_at",
+        "signature_hex"
+      ],
+      "properties": {
+        "attester_type": {
+          "type": "string",
+          "enum": [
+            "PARTY_SELF_DECLARATION",
+            "ACCREDITED_THIRD_PARTY",
+            "SOVEREIGN_AUTHORITY",
+            "CARRIER_REGISTRY",
+            "BANK"
+          ]
+        },
+        "authority_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accreditation_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1 }
+          ]
+        },
+        "attested_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "signature_hex": {
+          "$ref": "#/$defs/Sha256Hex"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "attester_type": {
+                "not": { "const": "PARTY_SELF_DECLARATION" }
+              }
+            },
+            "required": ["attester_type"]
+          },
+          "then": {
+            "properties": {
+              "accreditation_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SlotEnvelopeBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "layer",
+        "state",
+        "payload",
+        "seal",
+        "attestation",
+        "fault_codes"
+      ],
+      "properties": {
+        "slot_id": {
+          "type": "string",
+          "pattern": "^L[1-5]\\.S(0[1-9]|1[0-8])_[A-Z0-9_]+$"
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["L1", "L2", "L3", "L4", "L5"]
+        },
+        "state": {
+          "$ref": "#/$defs/EpistemicState"
+        },
+        "payload": {
+          "type": ["object", "null"]
+        },
+        "seal": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/CryptographicSeal" }
+          ]
+        },
+        "attestation": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/AttestationMetadata" }
+          ]
+        },
+        "fault_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ERR_[A-Z0-9_]+$"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": { "const": "UNKNOWN" }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "payload": { "type": "null" },
+              "seal": { "type": "null" },
+              "attestation": { "type": "null" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": { "enum": ["ASSERTED", "CORROBORATED"] }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "payload": { "type": "object" },
+              "seal": { "$ref": "#/$defs/CryptographicSeal" },
+              "attestation": { "$ref": "#/$defs/AttestationMetadata" }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": { "const": "CORROBORATED" }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "attestation": {
+                "allOf": [
+                  { "$ref": "#/$defs/AttestationMetadata" },
+                  {
+                    "properties": {
+                      "attester_type": {
+                        "not": { "const": "PARTY_SELF_DECLARATION" }
+                      },
+                      "accreditation_id": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PayloadL1S01": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "po_number",
+        "buyer_eori",
+        "supplier_id",
+        "incoterms_2020",
+        "currency",
+        "total_amount",
+        "total_units",
+        "unit_price",
+        "delivery_window_end"
+      ],
+      "properties": {
+        "po_number": { "type": "string", "minLength": 1 },
+        "buyer_eori": { "type": "string", "pattern": "^[A-Z]{2}[A-Z0-9]{1,15}$" },
+        "supplier_id": { "type": "string", "minLength": 1 },
+        "incoterms_2020": {
+          "type": "string",
+          "enum": ["EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "FAS", "FOB", "CFR", "CIF"]
+        },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "total_amount": { "type": "number", "exclusiveMinimum": 0 },
+        "total_units": { "type": "integer", "minimum": 1 },
+        "unit_price": { "type": "number", "exclusiveMinimum": 0 },
+        "delivery_window_end": { "type": "string", "format": "date" }
+      }
+    },
+    "PayloadL1S02": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tech_pack_id",
+        "sku_code",
+        "product_description",
+        "fiber_composition",
+        "gsm_weight",
+        "dimensional_tolerance_pct",
+        "bom_hash"
+      ],
+      "properties": {
+        "tech_pack_id": { "type": "string", "minLength": 1 },
+        "sku_code": { "type": "string", "minLength": 1 },
+        "product_description": { "type": "string", "minLength": 1 },
+        "fiber_composition": { "type": "string", "minLength": 1 },
+        "gsm_weight": { "type": "number", "exclusiveMinimum": 0 },
+        "dimensional_tolerance_pct": { "type": "number", "minimum": 0 },
+        "bom_hash": { "$ref": "#/$defs/Sha256Hex" }
+      }
+    },
+    "PayloadL1S03": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_seal_tag",
+        "physical_sha256_manifest",
+        "approved_by_buyer_id",
+        "approved_at",
+        "colorfastness_baseline"
+      ],
+      "properties": {
+        "sample_seal_tag": { "type": "string", "minLength": 1 },
+        "physical_sha256_manifest": { "$ref": "#/$defs/Sha256Hex" },
+        "approved_by_buyer_id": { "type": "string", "minLength": 1 },
+        "approved_at": { "type": "string", "format": "date-time" },
+        "colorfastness_baseline": { "type": "string", "minLength": 1 }
+      }
+    },
+    "PayloadL2S04": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legal_name",
+        "tax_registration_id",
+        "country_iso2",
+        "factory_lat",
+        "factory_lon",
+        "beneficial_owners_verified"
+      ],
+      "properties": {
+        "legal_name": { "type": "string", "minLength": 1 },
+        "tax_registration_id": { "type": "string", "minLength": 1 },
+        "country_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "factory_lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "factory_lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "beneficial_owners_verified": { "type": "boolean" }
+      }
+    },
+    "PayloadL2S05": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_authority",
+        "membership_id",
+        "rex_number",
+        "eu_2024_3015_screening_status",
+        "sanctions_clear"
+      ],
+      "properties": {
+        "registry_authority": { "type": "string", "minLength": 1 },
+        "membership_id": { "type": "string", "minLength": 1 },
+        "rex_number": { "type": "string", "pattern": "^[A-Z]{2}REX[0-9A-Z]{6,}$" },
+        "eu_2024_3015_screening_status": {
+          "type": "string",
+          "enum": ["CLEAR", "FLAGGED", "UNDER_REVIEW"]
+        },
+        "sanctions_clear": { "type": "boolean" }
+      }
+    },
+    "PayloadL2S06": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allocated_lines",
+        "daily_output_capacity_units",
+        "subcontracting_authorized",
+        "tier2_mill_tax_ids"
+      ],
+      "properties": {
+        "allocated_lines": { "type": "integer", "minimum": 0 },
+        "daily_output_capacity_units": { "type": "integer", "minimum": 0 },
+        "subcontracting_authorized": { "type": "boolean" },
+        "tier2_mill_tax_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "PayloadL3S07": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "media_count",
+        "capture_device_pubkey_fp",
+        "exif_gps_lat",
+        "exif_gps_lon",
+        "max_distance_from_s04_meters",
+        "merkle_media_root"
+      ],
+      "properties": {
+        "media_count": { "type": "integer", "minimum": 1 },
+        "capture_device_pubkey_fp": { "$ref": "#/$defs/Sha256Hex" },
+        "exif_gps_lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "exif_gps_lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "max_distance_from_s04_meters": { "type": "number", "minimum": 0 },
+        "merkle_media_root": { "$ref": "#/$defs/Sha256Hex" }
+      }
+    },
+    "PayloadL3S08": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inspector_agency",
+        "iso17020_accreditation_id",
+        "aql_standard",
+        "sample_size",
+        "critical_defects",
+        "major_defects",
+        "max_allowed_major",
+        "result"
+      ],
+      "properties": {
+        "inspector_agency": { "type": "string", "minLength": 1 },
+        "iso17020_accreditation_id": { "type": "string", "minLength": 1 },
+        "aql_standard": { "const": "ISO_2859_1_AQL_2_5" },
+        "sample_size": { "type": "integer", "minimum": 1 },
+        "critical_defects": { "type": "integer", "minimum": 0 },
+        "major_defects": { "type": "integer", "minimum": 0 },
+        "max_allowed_major": { "type": "integer", "minimum": 0 },
+        "result": { "type": "string", "enum": ["PASS", "FAIL"] }
+      }
+    },
+    "PayloadL3S09": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lab_name",
+        "iso17025_accreditation_id",
+        "report_number",
+        "reach_annex_xvii_compliant",
+        "azo_dyes_ppm",
+        "measured_cotton_pct",
+        "espr_dpp_uid"
+      ],
+      "properties": {
+        "lab_name": { "type": "string", "minLength": 1 },
+        "iso17025_accreditation_id": { "type": "string", "minLength": 1 },
+        "report_number": { "type": "string", "minLength": 1 },
+        "reach_annex_xvii_compliant": { "type": "boolean" },
+        "azo_dyes_ppm": { "type": "number", "minimum": 0 },
+        "measured_cotton_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "espr_dpp_uid": { "type": "string", "minLength": 1 }
+      }
+    },
+    "PayloadL4S10": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seal_serial_number",
+        "iso17712_clause_6_compliant",
+        "container_number",
+        "stuffing_lat",
+        "stuffing_lon",
+        "sealed_at"
+      ],
+      "properties": {
+        "seal_serial_number": { "type": "string", "minLength": 1 },
+        "iso17712_clause_6_compliant": { "type": "boolean" },
+        "container_number": { "type": "string", "pattern": "^[A-Z]{4}[0-9]{7}$" },
+        "stuffing_lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "stuffing_lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "sealed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "PayloadL4S11": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bl_number",
+        "scac_code",
+        "vessel_name",
+        "vessel_imo",
+        "port_of_loading_unlocode",
+        "port_of_discharge_unlocode",
+        "container_number",
+        "shipped_on_board_date",
+        "gross_weight_kg",
+        "carton_count",
+        "clean_on_board"
+      ],
+      "properties": {
+        "bl_number": { "type": "string", "minLength": 1 },
+        "scac_code": { "type": "string", "pattern": "^[A-Z0-9]{4}$" },
+        "vessel_name": { "type": "string", "minLength": 1 },
+        "vessel_imo": { "type": "string", "pattern": "^[0-9]{7}$" },
+        "port_of_loading_unlocode": { "type": "string", "pattern": "^[A-Z]{5}$" },
+        "port_of_discharge_unlocode": { "type": "string", "pattern": "^[A-Z]{5}$" },
+        "container_number": { "type": "string", "pattern": "^[A-Z]{4}[0-9]{7}$" },
+        "shipped_on_board_date": { "type": "string", "format": "date" },
+        "gross_weight_kg": { "type": "number", "exclusiveMinimum": 0 },
+        "carton_count": { "type": "integer", "minimum": 1 },
+        "clean_on_board": { "type": "boolean" }
+      }
+    },
+    "PayloadL4S12": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coo_number",
+        "issuing_authority",
+        "origin_criterion",
+        "country_of_origin_iso2",
+        "exporter_rex_id",
+        "tier2_yarn_origin_iso2",
+        "tier3_raw_material_origin_iso2"
+      ],
+      "properties": {
+        "coo_number": { "type": "string", "minLength": 1 },
+        "issuing_authority": { "type": "string", "minLength": 1 },
+        "origin_criterion": { "type": "string", "minLength": 1 },
+        "country_of_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "exporter_rex_id": { "type": "string", "pattern": "^[A-Z]{2}REX[0-9A-Z]{6,}$" },
+        "tier2_yarn_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "tier3_raw_material_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" }
+      }
+    },
+    "PayloadL4S13": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "instrument_type",
+        "issuing_bank_bic",
+        "advising_bank_bic",
+        "lc_number",
+        "amount",
+        "currency",
+        "latest_shipment_date",
+        "expiry_date"
+      ],
+      "properties": {
+        "instrument_type": { "type": "string", "enum": ["MT700_DLC", "MT103_TT"] },
+        "issuing_bank_bic": { "type": "string", "pattern": "^[A-Z0-9]{8}([A-Z0-9]{3})?$" },
+        "advising_bank_bic": { "type": "string", "pattern": "^[A-Z0-9]{8}([A-Z0-9]{3})?$" },
+        "lc_number": { "type": "string", "minLength": 1 },
+        "amount": { "type": "number", "exclusiveMinimum": 0 },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "latest_shipment_date": { "type": "string", "format": "date" },
+        "expiry_date": { "type": "string", "format": "date" }
+      }
+    },
+    "PayloadL5S14": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "invoice_number",
+        "invoice_date",
+        "fob_value_eur",
+        "international_freight_eur",
+        "insurance_eur",
+        "cif_customs_value_eur",
+        "valuation_method"
+      ],
+      "properties": {
+        "invoice_number": { "type": "string", "minLength": 1 },
+        "invoice_date": { "type": "string", "format": "date" },
+        "fob_value_eur": { "type": "number", "minimum": 0 },
+        "international_freight_eur": { "type": "number", "minimum": 0 },
+        "insurance_eur": { "type": "number", "minimum": 0 },
+        "cif_customs_value_eur": { "type": "number", "exclusiveMinimum": 0 },
+        "valuation_method": { "const": "UCC_ART_70_TRANSACTION_VALUE" }
+      }
+    },
+    "PayloadL5S15": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taric_10_code",
+        "preference_code",
+        "mfn_duty_rate_pct",
+        "preferential_duty_rate_pct",
+        "calculated_duty_eur",
+        "import_vat_rate_pct",
+        "calculated_vat_eur"
+      ],
+      "properties": {
+        "taric_10_code": { "type": "string", "pattern": "^[0-9]{10}$" },
+        "preference_code": { "type": "string", "pattern": "^[0-9]{3}$" },
+        "mfn_duty_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "preferential_duty_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "calculated_duty_eur": { "type": "number", "minimum": 0 },
+        "import_vat_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "calculated_vat_eur": { "type": "number", "minimum": 0 }
+      }
+    },
+    "PayloadL5S16": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "psi_agency",
+        "certificate_number",
+        "verified_carton_count",
+        "verified_units_count",
+        "verified_gross_weight_kg",
+        "verified_seal_serial"
+      ],
+      "properties": {
+        "psi_agency": { "type": "string", "minLength": 1 },
+        "certificate_number": { "type": "string", "minLength": 1 },
+        "verified_carton_count": { "type": "integer", "minimum": 0 },
+        "verified_units_count": { "type": "integer", "minimum": 0 },
+        "verified_gross_weight_kg": { "type": "number", "minimum": 0 },
+        "verified_seal_serial": { "type": "string", "minLength": 1 }
+      }
+    },
+    "PayloadL5S17": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin_geofence_pass",
+        "transit_corridor_id",
+        "port_gate_in_timestamp",
+        "port_unlocode",
+        "hardware_tpm_quote_hash"
+      ],
+      "properties": {
+        "origin_geofence_pass": { "type": "boolean" },
+        "transit_corridor_id": { "type": "string", "minLength": 1 },
+        "port_gate_in_timestamp": { "type": "string", "format": "date-time" },
+        "port_unlocode": { "type": "string", "pattern": "^[A-Z]{5}$" },
+        "hardware_tpm_quote_hash": { "$ref": "#/$defs/Sha256Hex" }
+      }
+    },
+    "PayloadL5S18": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dossier_merkle_root",
+        "slot_digests_map_hash",
+        "kernel_version",
+        "reviewer_eidas_key_id",
+        "signed_at"
+      ],
+      "properties": {
+        "dossier_merkle_root": { "$ref": "#/$defs/Sha256Hex" },
+        "slot_digests_map_hash": { "$ref": "#/$defs/Sha256Hex" },
+        "kernel_version": { "type": "string", "minLength": 1 },
+        "reviewer_eidas_key_id": { "type": "string", "minLength": 1 },
+        "signed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "BlindIndex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normalized_tuple", "blind_index_hex", "registry_salt_id"],
+      "properties": {
+        "normalized_tuple": {
+          "type": "string",
+          "pattern": "^[^|]+\\|[^|]+\\|[^|]+\\|[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "blind_index_hex": {
+          "$ref": "#/$defs/Sha256Hex"
+        },
+        "registry_salt_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "HaltReason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "slot_id", "detail"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^ERR_[A-Z0-9_]+$"
+        },
+        "slot_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1 }
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "LcCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "requirement", "source_slots", "status", "detail"],
+      "properties": {
+        "reference": { "type": "string", "minLength": 1 },
+        "requirement": { "type": "string", "minLength": 1 },
+        "source_slots": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "NOT_EVALUATED"]
+        },
+        "detail": { "type": "string", "minLength": 1 }
+      }
+    },
+    "DeltaDataElement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["de", "name", "source_slots", "status", "values"],
+      "properties": {
+        "de": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "source_slots": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["COMPLETE", "PENDING", "MISSING"]
+        },
+        "values": { "type": "object" }
+      }
+    },
+    "InstitutionalViews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pre_wire_gate", "lc_mt700_check", "delta_ie_h1_pack"],
+      "properties": {
+        "pre_wire_gate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "gate_id",
+            "verdict",
+            "advance_amount_eur",
+            "currency",
+            "mandatory_slots",
+            "uncorroborated_slots",
+            "halt_reasons",
+            "generated_at"
+          ],
+          "properties": {
+            "gate_id": { "const": "GATE_01_DEPOSIT_PRE_WIRE" },
+            "verdict": { "type": "string", "enum": ["READY", "HARD_STOP"] },
+            "advance_amount_eur": { "type": "number", "minimum": 0 },
+            "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+            "mandatory_slots": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "uncorroborated_slots": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "halt_reasons": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/HaltReason" }
+            },
+            "generated_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "lc_mt700_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["profile", "overall", "checks", "generated_at"],
+          "properties": {
+            "profile": { "const": "UCP_600_ISBP_821" },
+            "overall": {
+              "type": "string",
+              "enum": ["CLEAN", "DISCREPANT", "INCOMPLETE"]
+            },
+            "checks": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/LcCheck" }
+            },
+            "generated_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "delta_ie_h1_pack": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "declaration_type",
+            "entry_process",
+            "overall",
+            "data_elements",
+            "generated_at"
+          ],
+          "properties": {
+            "declaration_type": { "const": "H1" },
+            "entry_process": { "const": "DELTA_IE_VOLET_IMPORT_H1" },
+            "overall": { "type": "string", "enum": ["READY", "INCOMPLETE"] },
+            "data_elements": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/DeltaDataElement" }
+            },
+            "generated_at": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  }
+}

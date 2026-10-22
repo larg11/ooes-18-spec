@@ -1,0 +1,42 @@
+{
+  "name": "ooes-18-spec",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OOES-18: An Open Deterministic Evidence Schema for EU Regulation 2024/3015 and French DELTA IE (H1) Pre-Clearance",
+  "keywords": [
+    "eu-2024-3015",
+    "forced-labour",
+    "delta-ie",
+    "h1",
+    "ucp-600",
+    "isbp-821",
+    "trade-finance",
+    "customs",
+    "deterministic-verification",
+    "rfc-8785",
+    "rfc-5869",
+    "blind-index"
+  ],
+  "author": {
+    "name": "Mohammad Anwaruzzaman",
+    "orcid": "0009-0004-5697-7634",
+    "affiliation": "First Order Technologies SAS (Paris, France - in incorporation)"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "clean": "node -e \"import('node:fs').then(fs=>fs.rmSync('dist',{recursive:true,force:true}))\"",
+    "build": "tsc -p tsconfig.json",
+    "seal-vector": "npm run build && node dist/src/seal-vector.js",
+    "test": "npm run build && node --test dist/tests/verifier.test.js",
+    "verify": "npm run build && node dist/src/cli.js verify",
+    "tamper-demo": "npm run build && node dist/src/cli.js tamper-demo"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
