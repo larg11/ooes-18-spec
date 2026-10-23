@@ -464,8 +464,6 @@ The schema is the HTTP of origin evidence. The business is the certificate autho
 **Mohammad Anwaruzzaman**
 
 - Founder & Chief Architect, First Order Technologies SAS (Paris, France - in incorporation)
-- Postgraduate Diploma in Industrial Production & Supply Chain, Arts et Métiers ParisTech (ENSAM, Paris)
-- Former Research Fellow, Laboratory for Production Management and Processes, EPFL (Lausanne)
 - ORCID: [0009-0004-5697-7634](https://orcid.org/0009-0004-5697-7634)
 
 ---

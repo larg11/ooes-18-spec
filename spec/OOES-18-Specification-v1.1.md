@@ -5,7 +5,7 @@
 **Status:** Open technical specification  
 **Author:** Mohammad Anwaruzzaman  
 **ORCID:** 0009-0004-5697-7634  
-**Affiliation:** Founder & Chief Architect, First Order Technologies SAS (Paris, France - in incorporation); Postgraduate Diploma in Industrial Production & Supply Chain, Arts et Métiers ParisTech (ENSAM, Paris); Former Research Fellow, Laboratory for Production Management and Processes, EPFL (Lausanne)  
+**Affiliation:** Founder & Chief Architect, First Order Technologies SAS (Paris, France - in incorporation)  
 **Companion paper:** DS-PR412, SSRN #6661398, DOI 10.2139/ssrn.6661398  
 **Reference engine:** `@foin/crisis-engine`  
 **License:** CC-BY-4.0 for this document; Apache-2.0 for schemas, test vectors, trust store, and reference verifier
