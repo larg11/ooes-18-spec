@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ooes-18.org/schema/ooes-18.schema.json",
-  "title": "OOES-18 Open Origin Evidence Schema v1.0.0",
+  "title": "OOES-18 Open Origin Evidence Schema v1.1.0",
   "description": "Canonical OOES18Dossier document for deterministic pre-clearance evidence under EU Regulation 2024/3015, UCP 600, and French DELTA IE Volet Import (H1).",
   "type": "object",
   "additionalProperties": false,
@@ -24,7 +24,7 @@
       "const": "OOES-18"
     },
     "version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "dossier_id": {
       "type": "string",
@@ -413,6 +413,14 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
+    "Ed25519PublicKeyHex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Ed25519SignatureHex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$"
+    },
     "Hex16Bytes": {
       "type": "string",
       "pattern": "^[0-9a-f]{32}$"
@@ -476,6 +484,9 @@
         "accreditation_id",
         "attested_at",
         "expires_at",
+        "signature_algorithm",
+        "attester_public_key_hex",
+        "payload_jcs_sha256",
         "signature_hex"
       ],
       "properties": {
@@ -507,8 +518,17 @@
           "type": "string",
           "format": "date-time"
         },
-        "signature_hex": {
+        "signature_algorithm": {
+          "const": "Ed25519"
+        },
+        "attester_public_key_hex": {
+          "$ref": "#/$defs/Ed25519PublicKeyHex"
+        },
+        "payload_jcs_sha256": {
           "$ref": "#/$defs/Sha256Hex"
+        },
+        "signature_hex": {
+          "$ref": "#/$defs/Ed25519SignatureHex"
         }
       },
       "allOf": [
@@ -843,6 +863,7 @@
         "seal_serial_number",
         "iso17712_clause_6_compliant",
         "container_number",
+        "stuffing_location_type",
         "stuffing_lat",
         "stuffing_lon",
         "sealed_at"
@@ -851,6 +872,7 @@
         "seal_serial_number": { "type": "string", "minLength": 1 },
         "iso17712_clause_6_compliant": { "type": "boolean" },
         "container_number": { "type": "string", "pattern": "^[A-Z]{4}[0-9]{7}$" },
+        "stuffing_location_type": { "type": "string", "enum": ["FACTORY", "PORT"] },
         "stuffing_lat": { "type": "number", "minimum": -90, "maximum": 90 },
         "stuffing_lon": { "type": "number", "minimum": -180, "maximum": 180 },
         "sealed_at": { "type": "string", "format": "date-time" }
@@ -862,6 +884,7 @@
       "required": [
         "bl_number",
         "scac_code",
+        "carrier_name",
         "vessel_name",
         "vessel_imo",
         "port_of_loading_unlocode",
@@ -875,6 +898,7 @@
       "properties": {
         "bl_number": { "type": "string", "minLength": 1 },
         "scac_code": { "type": "string", "pattern": "^[A-Z0-9]{4}$" },
+        "carrier_name": { "type": "string", "minLength": 1 },
         "vessel_name": { "type": "string", "minLength": 1 },
         "vessel_imo": { "type": "string", "pattern": "^[0-9]{7}$" },
         "port_of_loading_unlocode": { "type": "string", "pattern": "^[A-Z]{5}$" },
@@ -891,6 +915,9 @@
       "additionalProperties": false,
       "required": [
         "coo_number",
+        "proof_type",
+        "origin_regime",
+        "preference_programme",
         "issuing_authority",
         "origin_criterion",
         "country_of_origin_iso2",
@@ -899,11 +926,28 @@
         "tier3_raw_material_origin_iso2"
       ],
       "properties": {
-        "coo_number": { "type": "string", "minLength": 1 },
+        "coo_number": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Certificate number for a chamber certificate, or statement number for a REX statement."
+        },
+        "proof_type": { "type": "string", "enum": ["CHAMBER_CERTIFICATE", "REX_STATEMENT"] },
+        "origin_regime": { "type": "string", "enum": ["NON_PREFERENTIAL", "PREFERENTIAL"] },
+        "preference_programme": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "minLength": 1 }
+          ]
+        },
         "issuing_authority": { "type": "string", "minLength": 1 },
         "origin_criterion": { "type": "string", "minLength": 1 },
         "country_of_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
-        "exporter_rex_id": { "type": "string", "pattern": "^[A-Z]{2}REX[0-9A-Z]{6,}$" },
+        "exporter_rex_id": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^[A-Z]{2}REX[0-9A-Z]{6,}$" }
+          ]
+        },
         "tier2_yarn_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" },
         "tier3_raw_material_origin_iso2": { "type": "string", "pattern": "^[A-Z]{2}$" }
       }

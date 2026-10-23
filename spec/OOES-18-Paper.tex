@@ -17,7 +17,7 @@
 
 \setlength{\columnsep}{0.55cm}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{1.4pt}
+\setlength{\parskip}{1.0pt}
 \setlength{\abovedisplayskip}{3pt}
 \setlength{\belowdisplayskip}{3pt}
 \setlength{\abovedisplayshortskip}{1pt}
@@ -39,10 +39,10 @@
 \scriptsize Founder \& Chief Architect, First Order Technologies SAS, Paris, France (in incorporation)\\[-1pt]
 \scriptsize Postgraduate Diploma in Industrial Production \& Supply Chain, Arts et M\'etiers ParisTech (ENSAM, Paris)\\[-1pt]
 \scriptsize Former Research Fellow, Laboratory for Production Management and Processes, EPFL (Lausanne)\\[-1pt]
-\scriptsize ORCID: 0009-0004-5697-7634 \quad Companion dataset: DS-PR412 (SSRN \#6661398)%
+\scriptsize ORCID: 0009-0004-5697-7634 \quad Companion paper: DS-PR412 (SSRN \#6661398; DOI 10.2139/ssrn.6661398)%
 }
 
-\date{\small October 2026 \quad v1.0.0}
+\date{\small October 2026 \quad v1.1.0}
 
 \begin{document}
 
@@ -52,19 +52,19 @@
 
 \begin{abstract}
 \small
-Cross-border manufacturing orders expose importers to a structural epistemic gap. A 30\% advance telegraphic transfer is released on Day 0 against assertions, while physical production, origin, custody, and documentary truth become observable only at destination arrival. DS-PR412 (SSRN \#6661398, $n=412$ orders, six Asian corridors, 2011--2024) documents a 14.28\% adverse event rate (59/412, about one in seven) and a mean 75-day verification gap. This paper specifies OOES-18, an open deterministic evidence schema organized as five layers and eighteen slots. Each slot is \STATE{UNKNOWN}, \STATE{ASSERTED}, or \STATE{CORROBORATED} in a bounded Kleene lattice. Two release gates combine state predicates with cross-slot reconciliation. Slots are sealed with RFC 8785 JCS, RFC 5869 HKDF-SHA256, HMAC-SHA256, and AES-256-GCM. A salted blind-index protocol detects cross-lender duplicate pledges without sharing tenant keys. The authentic vector \code{CASCADE-2026-9F4A2C} halts both gates by design; a one-byte laboratory mutation forces demotion and a \code{GATE_02} hard stop. We close with the Oracle Boundary Theorem: cryptography proves capture provenance and immutability, not physical ground truth.
+Cross-border manufacturing orders expose importers to a structural epistemic gap. A 30\% advance telegraphic transfer is released on Day 0 against assertions, while physical production, origin, custody, and documentary truth become observable only at destination arrival. DS-PR412 (SSRN \#6661398, DOI 10.2139/ssrn.6661398) is a practice-derived dataset of 412 first orders placed by small founder-led firms in six countries, 2011--2024; 59 orders are coded as adverse (14.32\%, about one in seven). The 75-day contract-to-arrival window used here is a reference workflow assumption, not a reported DS-PR412 mean. This paper specifies OOES-18, an open deterministic evidence schema organized as five layers and eighteen slots. Each slot is \STATE{UNKNOWN}, \STATE{ASSERTED}, or \STATE{CORROBORATED} in a bounded Kleene lattice. Two release gates combine state predicates with cross-slot reconciliation. Slots are sealed with RFC 8785 JCS, RFC 5869 HKDF-SHA256, HMAC-SHA256, and AES-256-GCM; attester authenticity is carried by Ed25519 signatures over the payload hash and checked against a relying-party trust store. A salted blind-index protocol detects cross-lender duplicate pledges without sharing tenant keys. The deterministic vector \code{CASCADE-2026-9F4A2C} halts both gates by design; a one-byte laboratory mutation forces demotion and a \code{GATE_02} hard stop. We close with the Oracle Boundary Theorem: cryptography proves tenant-side integrity and attester authenticity, not physical ground truth.
 \end{abstract}
 
 \section{Empirical Problem and Architectural Invariants}
 
 \subsection{The 75-day epistemic verification gap}
-Let $t_0$ be the instant an importer releases a 30\% advance telegraphic transfer, and $t_{75}$ the mean destination-arrival instant. DS-PR412 reports
+Let $t_0$ be the instant an importer releases a 30\% advance telegraphic transfer, and $t_{75}$ the destination-arrival instant in the reference workflow. This paper models
 \begin{equation}
 \Delta_{\mathrm{epistemic}}=t_{75}-t_{0}=75\ \text{days}.
 \end{equation}
-During this interval capital is exposed to a dossier that has not been independently corroborated. The factory may be the audited factory; the container may have been stuffed at the declared geofence; the laboratory may have tested the declared batch. At $t_0$ these are assertions, not established facts. The exposure is not limited to the advance: a documentary credit may cover the balance, a credit insurer may underwrite the receivable, and a bank may finance the shipment. Each participant prices the same unresolved gap, often without a collision-resistant view of whether the shipment is already pledged elsewhere.
+The 75-day figure sizes the exposure; it is not a mean reported by DS-PR412. During this interval capital is exposed to a dossier that has not been independently corroborated. The factory may be the audited factory; the container may have been stuffed at the declared geofence; the laboratory may have tested the declared batch. At $t_0$ these are assertions, not established facts. The exposure is not limited to the advance: a documentary credit may cover the balance, a credit insurer may underwrite the receivable, and a bank may finance the shipment. Each participant prices the same unresolved gap, often without a collision-resistant view of whether the shipment is already pledged elsewhere.
 
-DS-PR412 reports 412 orders, 59 adverse operational or documentary events, and an incidence of $59/412=14.28\%$ (approximately 1 in 7). The events fall into four families: quality defects against the technical specification; unauthorized shadow subcontracting to an unaudited tier-1 or tier-2 unit; late or forged shipping documents; and TARIC or origin misclassification. OOES-18 does not predict these events. It makes the evidence state explicit and forces a deterministic halt when the evidence required to underwrite the event is absent or merely asserted.
+DS-PR412 is a two-page, practice-derived working paper covering 412 first manufacturing orders placed by small founder-led firms with factories in Bangladesh, Vietnam, China, India, South Korea, and Thailand across five product categories, 2011--2024. The dataset is author-coded, and an inter-rater reliability review is in progress. Of the 412 orders, 59 are coded as adverse, an incidence of $59/412=14.32\%$ (approximately 1 in 7). For OOES-18 purposes, we group the operational failure modes into four families: quality defects against the technical specification; unauthorized shadow subcontracting to an unaudited tier-1 or tier-2 unit; late or forged shipping documents; and TARIC or origin misclassification. This grouping is the specification's, not a classification claimed by DS-PR412. The 14.32\% figure is descriptive, not a causal estimate. OOES-18 does not predict these events. It makes the evidence state explicit and forces a deterministic halt when the evidence required to underwrite the event is absent or merely asserted.
 
 \subsection{Why legacy layers fail}
 Post-presentation document examination operates at $t_{45}$--$t_{60}$, after the advance is wired and the vessel has sailed. It is retrospective, so a discrepancy cannot recover the Day-0 capital. It is probabilistic: OCR, VLM layout parsing, and LLM extraction return candidate strings with confidence scores, but a score is not an epistemic state. A 0.97 extraction confidence for a container number does not establish that the container was stuffed at the declared factory, nor that it was not pledged to a second lender. Finally, it compares documents to documents, not documents to physical capture events.
@@ -106,9 +106,9 @@ Slot & Canonical name & Required semantic payload fields \\
 \code{L3.S07} & Geotagged inline media & \code{media_count}, \code{capture_device_pubkey_fp}, \code{exif_gps_lat}, \code{exif_gps_lon}, \code{max_distance_from_s04_meters}, \code{merkle_media_root} \\
 \code{L3.S08} & ISO 2859-1 inline AQL & \code{inspector_agency}, \code{iso17020_accreditation_id}, \code{aql_standard}, \code{sample_size}, \code{critical_defects}, \code{major_defects}, \code{max_allowed_major}, \code{result} \\
 \code{L3.S09} & ISO/IEC 17025 lab and DPP & \code{lab_name}, \code{iso17025_accreditation_id}, \code{report_number}, \code{reach_annex_xvii_compliant}, \code{azo_dyes_ppm}, \code{measured_cotton_pct}, \code{espr_dpp_uid} \\
-\code{L4.S10} & ISO 17712 bolt seal & \code{seal_serial_number}, \code{iso17712_clause_6_compliant}, \code{container_number}, \code{stuffing_lat}, \code{stuffing_lon}, \code{sealed_at} \\
-\code{L4.S11} & Clean on-board B/L & \code{bl_number}, \code{scac_code}, \code{vessel_name}, \code{vessel_imo}, \code{port_of_loading_unlocode}, \code{port_of_discharge_unlocode}, \code{container_number}, \code{shipped_on_board_date}, \code{gross_weight_kg}, \code{carton_count}, \code{clean_on_board} \\
-\code{L4.S12} & Certificate of origin & \code{coo_number}, \code{issuing_authority}, \code{origin_criterion}, \code{country_of_origin_iso2}, \code{exporter_rex_id}, \code{tier2_yarn_origin_iso2}, \code{tier3_raw_material_origin_iso2} \\
+\code{L4.S10} & ISO 17712 bolt seal & \code{seal_serial_number}, \code{iso17712_clause_6_compliant}, \code{container_number}, \code{stuffing_location_type}, \code{stuffing_lat}, \code{stuffing_lon}, \code{sealed_at} \\
+\code{L4.S11} & Clean on-board B/L & \code{bl_number}, \code{scac_code}, \code{carrier_name}, \code{vessel_name}, \code{vessel_imo}, \code{port_of_loading_unlocode}, \code{port_of_discharge_unlocode}, \code{container_number}, \code{shipped_on_board_date}, \code{gross_weight_kg}, \code{carton_count}, \code{clean_on_board} \\
+\code{L4.S12} & Origin proof (certificate or REX) & \code{coo_number}, \code{proof_type}, \code{origin_regime}, \code{preference_programme}, \code{issuing_authority}, \code{origin_criterion}, \code{country_of_origin_iso2}, \code{exporter_rex_id}, \code{tier2_yarn_origin_iso2}, \code{tier3_raw_material_origin_iso2} \\
 \code{L4.S13} & Settlement instrument & \code{instrument_type}, \code{issuing_bank_bic}, \code{advising_bank_bic}, \code{lc_number}, \code{amount}, \code{currency}, \code{latest_shipment_date}, \code{expiry_date} \\
 \code{L5.S14} & Landed valuation & \code{invoice_number}, \code{invoice_date}, \code{fob_value_eur}, \code{international_freight_eur}, \code{insurance_eur}, \code{cif_customs_value_eur}, \code{valuation_method} \\
 \code{L5.S15} & TARIC and fiscal schedule & \code{taric_10_code}, \code{preference_code}, \code{mfn_duty_rate_pct}, \code{preferential_duty_rate_pct}, \code{calculated_duty_eur}, \code{import_vat_rate_pct}, \code{calculated_vat_eur} \\
@@ -126,10 +126,11 @@ The state space is a bounded chain:
 \end{equation}
 Meet and join are $\min$ and $\max$. \STATE{UNKNOWN} covers missing, unsubmitted, expired, schema-invalid, or cryptographically unauthenticated payloads. It is never coerced to truthy. \STATE{ASSERTED} is a structurally valid, sealed payload uploaded by an interested party with capture provenance. \STATE{CORROBORATED} requires an independent accreditation identifier and a non-expired attestation.
 
-Let $\Sigma_{\mathrm{ev}}=\{\textsc{Capture},\textsc{Attest},\textsc{SealFail},\textsc{Expire}\}$. The transition $\delta:\mathcal{E}\times\Sigma_{\mathrm{ev}}\to\mathcal{E}$ is monotone only under cryptographic integrity:
+Let $\Sigma_{\mathrm{ev}}=\{\textsc{Capture},\textsc{Attest},\textsc{SealOk},\textsc{SealFail},\textsc{Expire}\}$. The transition $\delta:\mathcal{E}\times\Sigma_{\mathrm{ev}}\to\mathcal{E}$ is monotone only under cryptographic integrity:
 \begin{align}
 \delta(\STATE{UNKNOWN},\textsc{Capture})&=\STATE{ASSERTED},\\
 \delta(\STATE{ASSERTED},\textsc{Attest})&=\STATE{CORROBORATED},\\
+\delta(s,\textsc{SealOk})&=s,\\
 \delta(s,\textsc{SealFail})&=\STATE{UNKNOWN},\\
 \delta(s,\textsc{Expire})&=\STATE{UNKNOWN}.
 \end{align}
@@ -146,29 +147,39 @@ V_1=\STATE{READY}\iff\Bigl[\forall s\in M_1:\sigma(s)=\STATE{CORROBORATED}\Bigr]
 \end{equation}
 where $\Phi_1$ requires \code{S05.sanctions_clear}, \code{S05.eu_2024_3015_screening_status="CLEAR"}, \code{S06.subcontracting_authorized=false}, and \code{S06.daily_output_capacity_units>0}. Otherwise the gate returns \STATE{HARD\_STOP} with the exact uncorroborated slots and semantic codes.
 
-\code{GATE_02_BALANCE_AND_PRE_CLEARANCE} uses the core set $M_2^{\mathrm{core}}=\{S01,S02,S03,S04,S07,S08,S09,S10\}$ and the documentary set $M_2^{\mathrm{rec}}=\{S11,S12,S14,S15\}$. It returns \STATE{READY} iff
+\code{GATE_02_BALANCE_AND_PRE_CLEARANCE} uses the core set $M_2^{\mathrm{core}}=\{S01,S02,S03,S04,S07,S08,S09,S10\}$ and the reconciliation set $M_2^{\mathrm{rec}}=\{S05,S11,S12,S14,S15,S16\}$ (14 slots). It returns \STATE{READY} iff
 \begin{equation}
 \Bigl[\forall s\in M_2^{\mathrm{core}}\cup M_2^{\mathrm{rec}}:\sigma(s)=\STATE{CORROBORATED}\Bigr]\land\Phi_2,
 \end{equation}
 with
+{\footnotesize
 \begin{align}
 \Phi_2:\quad &\mathrm{haversine}(S04,S07)\le 500\ \mathrm{m},\nonumber\\
+&\text{if }\code{S10.stuffing_location_type="FACTORY"}:\nonumber\\
+&\qquad \mathrm{haversine}(S04,S10)\le 500\ \mathrm{m},\nonumber\\
 &\code{S08.result="PASS"},\ \code{S08.critical_defects=0},\nonumber\\
 &\code{S08.major_defects}\le\code{S08.max_allowed_major},\nonumber\\
 &\code{S09.reach_annex_xvii_compliant=true},\nonumber\\
 &\code{S09.azo_dyes_ppm<30},\nonumber\\
 &\bigl|\code{S09.measured_cotton_pct}-100\bigr|\le 3.0,\nonumber\\
 &\code{S10.container_number}=\code{S11.container_number},\nonumber\\
+&\code{S11.bl_number}\ \text{starts with}\ \code{S11.scac_code},\nonumber\\
+&\code{S10.container_number}\ \text{starts with}\ \code{S11.scac_code},\nonumber\\
 &\code{S11.clean_on_board=true},\nonumber\\
 &\code{S04.country_iso2}=\code{S12.country_of_origin_iso2},\nonumber\\
-&\code{S05.rex_number}=\code{S12.exporter_rex_id},\nonumber\\
+&\text{if }\code{S12.origin_criterion="WO"}:\ \text{all inputs domestic},\nonumber\\
+&\text{if }\code{S12.proof_type="REX\_STATEMENT"}:\nonumber\\
+&\quad \code{S12.origin_regime="PREFERENTIAL"}, \code{S05.rex}=\code{S12.rex},\nonumber\\
+&\text{if }\code{S12.proof_type="CHAMBER\_CERTIFICATE"}:\nonumber\\
+&\qquad \code{S12.origin_regime="NON\_PREFERENTIAL"},\nonumber\\
 &\bigl|\code{S14.fob}+\code{S14.freight}+\code{S14.insurance}\nonumber\\
 &\qquad-\code{S14.cif}\bigr|\le 0.01,\nonumber\\
-&\code{S15.taric_10_code}\ \text{matches}\ [0\text{-}9]\{10\}.
+&\code{S15.taric_10_code}\ \text{is 10 digits}.
 \end{align}
+}
+Port-side stuffing is legitimate: when \code{S10.stuffing_location_type="PORT"}, the factory geofence is not evaluated. A semantic check evaluates only when every source slot is \STATE{CORROBORATED}; otherwise it returns \STATE{NOT\_EVALUATED} and cannot contribute a pass. This prevents a gate from relying on data it does not require.
 Every failure is reported as a structured \code{\{code, slot_id, detail\}} tuple. The halt vocabulary includes \code{ERR_SLOT_ASSERTED}, \code{ERR_SLOT_UNKNOWN}, \code{ERR_SEAL_INTEGRITY_FAILURE}, \code{ERR_ATTESTATION_EXPIRED}, \code{ERR_SEMANTIC_GEOFENCE_DISTANCE}, \code{ERR_SEMANTIC_CONTAINER_MISMATCH}, \code{ERR_SEMANTIC_CIF_ARITHMETIC}, and \code{ERR_SEMANTIC_TARIC_FORMAT}.
 
-\newpage
 \section{Cryptographic Protocol and Blind Index}
 
 \subsection{RFC 8785 canonicalization}
@@ -200,6 +211,13 @@ Encryption at rest uses AES-256-GCM with a 96-bit IV and
 \end{equation}
 The seal stores \code{hkdf_salt}, \code{jcs_sha256}, \code{hmac_sha256}, \code{aes_gcm_iv}, \code{aes_gcm_ciphertext}, \code{aes_gcm_tag}, and \code{sealed_at}. The verifier re-derives $K_{\mathrm{slot}}$, recomputes $H_{\mathrm{JCS}}$ and $D_{\mathrm{slot}}$, decrypts the ciphertext, and compares plaintext to the canonical form. Any mismatch demotes the slot.
 
+\subsection{Ed25519 attestation signatures}
+The tenant HMAC is a tenant-side integrity control, not independent evidence: any holder of the master secret can recompute it. Attestation authenticity is carried by a separate Ed25519 signature over the payload hash. Each attestation carries \code{signature_algorithm="Ed25519"}, a 32-byte \code{attester_public_key_hex}, the payload hash \code{payload_jcs_sha256}, and a 64-byte \code{signature_hex}. The signed message is
+\begin{equation}
+M=\mathrm{JCS}\bigl(\{\,id,\ h,\ \tau,\ a,\ \alpha,\ t_a,\ t_e,\ \mathrm{alg},\ pk\,\}\bigr),
+\end{equation}
+where $id$ is the slot identifier, $h$ is \code{payload_jcs_sha256}, $\tau$ is the attester type, $a$ is the authority name, $\alpha$ is the accreditation identifier, $t_a$ and $t_e$ are the attested and expiry timestamps, $\mathrm{alg}$ is \code{"Ed25519"}, and $pk$ is the attester public key. The verifier checks $\mathrm{Ed25519Verify}(pk,M,\sigma)=1$ and, for a \STATE{CORROBORATED} slot, requires $pk$ to be present in the relying party's trust store for the stated authority, accreditation identifier, and slot scope at $t_{\mathrm{ref}}$. A valid signature from an untrusted key yields \code{ERR_ATTESTATION_UNTRUSTED}; a payload hash mismatch yields \code{ERR_ATTESTATION_PAYLOAD_MISMATCH}. This gives a bank a verification path that does not require the tenant master secret: recompute the payload hash, compare it to \code{payload_jcs_sha256}, and verify the Ed25519 signature with the attester's trusted key.
+
 \subsection{Dossier state root}
 Let $id_i,\sigma_i,D_i$ be the identifier, effective state, and authenticated digest of slot $S_i$, with $D_i=\epsilon$ for an unsealed slot. The root over $S01$--$S17$ is
 \begin{equation}
@@ -221,7 +239,7 @@ where $\mathrm{Compact}$ removes all whitespace and hyphens and uppercases the r
 \end{equation}
 Stripping separators is security-relevant: \code{MSCU-582910-4} and \code{MSCU5829104}, or \code{BD-BIN-004918273-0101} and \code{BDBIN0049182730101}, must collide. Two banks sharing only the network salt compute the same token without exchanging tenant keys, invoice value, or commercial terms.
 
-\textbf{Threat model.} A lender without another tenant's master secret cannot derive its slot keys or plaintext. A shared network salt reveals only that two submissions share a normalized tuple, not the amounts or currencies. HMAC-SHA256 with a 256-bit salt resists preimage and second-preimage attacks; the tuple is high-entropy because it includes the B/L, container, tax identifier, and invoice date. Salt rotation and access control limit offline enumeration. A collision is a review signal, not a fraud verdict.
+\textbf{Threat model.} A lender without another tenant's master secret cannot derive its slot keys or plaintext. A shared network salt reveals only that two submissions share a normalized tuple, not the amounts or currencies. HMAC-SHA256 with a 256-bit salt resists preimage and second-preimage attacks. The tuple is structured, not uniformly random: B/L numbers follow carrier patterns and container/tax identifiers are partly predictable. The salt must be access-controlled, queries rate-limited, and salts rotated; the blind index is a duplicate-detection signal, not a privacy guarantee against a salt holder. A collision is a review signal, not a fraud verdict.
 
 \subsection{Reference vector}
 The pinned fixtures are
@@ -230,9 +248,8 @@ The pinned fixtures are
 \mathit{hkdf\_salt}&=\texttt{a1b2...8f90}\quad(16\ \text{bytes}),\\
 \mathit{network\_salt}&=\texttt{f0e1...1e0f}\quad(32\ \text{bytes}).
 \end{align*}
-The vector \code{CASCADE-2026-9F4A2C} carries a Dhaka (\code{BDCGP}) to Le Havre (\code{FRLEH}) shipment of 12,000 jackets at EUR 12.00, FOB EUR 144,000.00, freight EUR 4,200.00, insurance EUR 300.00, CIF EUR 148,500.00, TARIC \code{6203321000}. It has 8 \STATE{CORROBORATED}, 4 \STATE{ASSERTED}, and 6 \STATE{UNKNOWN} slots. Its root is \code{a426317f...473321} and its blind index is \code{c1d26a18...7ba4d5}. Both gates hard-stop on the asserted and unknown slots. Full corroboration of \code{S05}, \code{S06}, \code{S11}, \code{S12}, \code{S14}, and \code{S15} transitions both gates to \STATE{READY}; a container mismatch, geofence violation, or CIF error returns them to \STATE{HARD\_STOP} even with valid seals.
+The vector \code{CASCADE-2026-9F4A2C} carries a Dhaka (\code{BDCGP}) to Le Havre (\code{FRLEH}) shipment of 12,000 jackets at EUR 12.00, FOB EUR 144,000.00, freight EUR 4,200.00, insurance EUR 300.00, CIF EUR 148,500.00, TARIC \code{6203321000}, B/L \code{MSCU260984112}, container \code{MSCU5829104}. It has 8 \STATE{CORROBORATED}, 4 \STATE{ASSERTED}, and 6 \STATE{UNKNOWN} slots. Its root is \code{d2eb3498...a67893} and its blind index is \code{3eea0224...1b4125}. Both gates hard-stop on the asserted and unknown slots. Full corroboration of \code{S05}, \code{S06}, \code{S11}, \code{S12}, \code{S14}, \code{S15}, and \code{S16} transitions both gates to \STATE{READY}; a container, stuffing-geofence, origin-criterion, carrier, or CIF contradiction returns them to \STATE{HARD\_STOP} even with valid seals.
 
-\newpage
 \section{Institutional Outputs and the Oracle Boundary}
 
 \subsection{View A: pre-wire treasury gate}
@@ -256,11 +273,12 @@ UCP 600 18; ISBP 821 C1 & Invoice issued by beneficiary, in credit currency, rec
 UCP 600 20; ISBP 821 E1 & Named vessel, shipped on board, clean B/L; \code{S10}, \code{S11} \\
 UCP 600 27 & No defective-condition clause; \code{S11} \\
 UCP 600 30 & 5\% quantity tolerance; \code{S01}, \code{S16} \\
-ISBP 821 K1 & Freight and insurance separately identifiable; \code{S14} \\
 ISBP 821 L1 & Origin, REX, and consignee consistency; \code{S04}, \code{S05}, \code{S12} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+CIF customs valuation follows UCC Articles 70 and 71, not ISBP 821 Section K. Section K addresses insurance documents. The H1 view carries the customs-value mapping; this paper does not claim an ISBP K1 freight/insurance test.
 
 \subsection{View C: DELTA IE H1 pack}
 The \code{delta_ie_h1_pack} view maps slots to UCC Annex B and DELTA IE H1 data elements (Table~\ref{tab:delta}). The pack is \STATE{READY} only when every element is \STATE{COMPLETE}; \STATE{PENDING} means present but uncorroborated, \STATE{MISSING} means absent.
@@ -279,7 +297,7 @@ DE & Element & OOES-18 source \\
 12 03 & Supporting documents & \code{S01}, \code{S09}, \code{S11}, \code{S12}, \code{S14}; codes N380, N705, U164/N865 \\
 13 01 & Exporter identity & \code{S04} \\
 13 04 & Importer EORI & \code{S01} \\
-14 03 & Customs value breakdown & \code{S14} \\
+14 03 & Customs value (UCC 70/71) & \code{S14} \\
 16 08 / 16 09 & Origin, preferential and non-preferential & \code{S12} \\
 18 09 & 10-digit TARIC & \code{S15} \\
 19 01 / 19 07 & Container and ISO 17712 seal & \code{S10}, \code{S11} \\
@@ -288,27 +306,30 @@ DE & Element & OOES-18 source \\
 \end{table}
 
 \subsection{The Oracle Boundary Theorem}
-\textbf{Theorem.} Let $\mathrm{Seal}(s)$ denote a valid HMAC-SHA256 and AES-256-GCM seal on slot $s$ under $K_{\mathrm{slot}}$, and let $\mathrm{Physical}(s)$ denote that the physical event described by $s$ occurred as stated. Then $\mathrm{Seal}(s)\nRightarrow\mathrm{Physical}(s)$.
+\textbf{Theorem.} Let $\mathrm{Seal}(s)$ denote a valid HMAC-SHA256 and AES-256-GCM seal on slot $s$ under $K_{\mathrm{slot}}$, let $\mathrm{Attest}(s)$ denote a valid Ed25519 attestation over the payload hash under a trusted attester key, and let $\mathrm{Physical}(s)$ denote that the physical event described by $s$ occurred as stated. Then
+\begin{equation}
+\mathrm{Seal}(s)\nRightarrow\mathrm{Physical}(s),\qquad
+\mathrm{Attest}(s)\nRightarrow\mathrm{Physical}(s).
+\end{equation}
 
-\textbf{Proof sketch.} $\mathrm{Seal}(s)$ is a function of the payload, the master secret, the dossier salt, the slot identifier, and the declared state. It is computed inside the tenant key domain and is invariant under the truth of $\mathrm{Physical}(s)$. A tenant can seal a false payload; an accredited oracle can attest a false observation; a compromised device can report false GPS. Validity proves only that a holder of $K_{\mathrm{slot}}$ produced the bytes, that the slot binding is intact, and that the bytes are unchanged since sealing.
+\textbf{Proof sketch.} $\mathrm{Seal}(s)$ is a function of the payload, the master secret, the dossier salt, the slot identifier, and the declared state. It is computed inside the tenant key domain and is invariant under the truth of $\mathrm{Physical}(s)$. $\mathrm{Attest}(s)$ proves that the holder of a trusted attester key signed the payload hash; it does not prove that the attester observed the event correctly, that the sample came from the declared batch, or that the accreditation is unrevoked. A tenant can seal a false payload; a trusted oracle can attest a false observation; a compromised device can report false GPS. Validity proves tenant-side integrity and attester authenticity, not physical truth.
 
-Physical truth enters only through the $\STATE{ASSERTED}\to\STATE{CORROBORATED}$ transition, which requires an independent attester whose type is not \code{PARTY_SELF_DECLARATION}, a verified accreditation identifier (ISO/IEC 17020, ISO/IEC 17025, sovereign registry, carrier eBL registry), and a non-expired signature at $t_{\mathrm{ref}}$. The accreditation layer establishes competence and independence; the cryptographic layer secures the statement after capture. Both are necessary; neither is sufficient. OOES-18 verifies accreditation presence and expiry, not real-time revocation; implementations SHOULD maintain a revocation feed. Oracle collusion, compromised tenants, and clock manipulation remain institutional threats outside the cryptographic boundary.
+Physical truth enters only through the $\STATE{ASSERTED}\to\STATE{CORROBORATED}$ transition, which requires an independent attester whose type is not \code{PARTY_SELF_DECLARATION}, a verified accreditation identifier (ISO/IEC 17020, ISO/IEC 17025, sovereign registry, carrier eBL registry), a valid Ed25519 signature over the payload hash, and a public key present in the relying party's trust store for that authority and slot scope at $t_{\mathrm{ref}}$. The accreditation and trust-store layers establish competence and identity; the cryptographic layer secures the statement after capture and makes it independently verifiable. All are necessary; none is sufficient. OOES-18 verifies accreditation presence, key trust, and expiry, not real-time revocation; implementations SHOULD maintain a revocation feed. Oracle collusion, stolen attester keys, compromised tenants, and clock manipulation remain institutional threats outside the cryptographic boundary.
 
 \subsection{Conformance and availability}
-An implementation conforms to OOES-18 v1.0.0 if it accepts the Draft 2020-12 schema, reproduces every digest in \code{vectors/CASCADE-2026-9F4A2C.dossier.json} from the pinned fixtures, hard-stops both gates on the default vector with the exact slot sets, demotes a mutated \code{L3.S09} to \STATE{UNKNOWN} with \code{GATE_02} halt, rejects a fully corroborated dossier with a container, geofence, or CIF contradiction, and computes identical blind indices for the two formatted bank inputs. The schema, vector, zero-dependency TypeScript verifier, and eleven-test suite are released under Apache-2.0; this paper is CC-BY-4.0.
+An implementation conforms to OOES-18 v1.1.0 if it accepts the Draft 2020-12 schema, reproduces every digest and Ed25519 signature in \code{vectors/CASCADE-2026-9F4A2C.dossier.json} and \code{trust/attesters.json} from the pinned fixtures, hard-stops both gates on the default vector with the exact slot sets, demotes a mutated \code{L3.S09} to \STATE{UNKNOWN} with \code{GATE_02} halt, rejects a fully corroborated dossier with a container, stuffing-geofence, origin-criterion, carrier, or CIF contradiction, rejects a valid signature from an untrusted key or a mutated signature, and computes identical blind indices for the two formatted bank inputs. The schema, vector, trust store, TypeScript verifier, and seventeen-test suite are released under Apache-2.0; this paper is CC-BY-4.0.
 
 \begin{thebibliography}{9}
-\footnotesize
+\scriptsize
 \setlength{\itemsep}{0pt}
 \bibitem{flr} Regulation (EU) 2024/3015 on prohibiting products made with forced labour, OJ L, 13 Dec. 2024.
 \bibitem{espr} Regulation (EU) 2024/1781 on ecodesign for sustainable products, OJ L, 28 June 2024.
 \bibitem{ucc} Regulation (EU) No 952/2013, Union Customs Code, Annex B.
-\bibitem{delta} DGDDI, DELTA IE Volet Import (H1), deployment from 30 Sept. 2025.
+\bibitem{delta} DGDDI, DELTA IE Volet Import (H1), notice of 30 Sept. 2025, \url{https://www.douane.gouv.fr/sites/default/files/2025-10/01/Notice_DELTA_IE_30_septembre_2025.pdf}.
 \bibitem{ucp} ICC, UCP 600 (2007), Arts. 14(d), 18, 20, 27, 30.
 \bibitem{isbp} ICC, ISBP 821 (2023).
-\bibitem{jcs} A. Rundgren, B. Jordan, S. Erdtman, RFC 8785: JSON Canonicalization Scheme, IETF, 2020.
-\bibitem{hkdf} H. Krawczyk, P. Eronen, RFC 5869: HKDF, IETF, 2010.
-\bibitem{ds} M. Anwaruzzaman, DS-PR412: Cross-Border Manufacturing Order Evidence Dataset, 2011--2024, SSRN \#6661398, 2026.
+\bibitem{rfc} A. Rundgren et al., RFC 8785, 2020; H. Krawczyk, P. Eronen, RFC 5869, 2010; S. Josefsson, I. Liusvaara, RFC 8032, 2017.
+\bibitem{ds} M. Anwaruzzaman, First-Order Manufacturing Failure in Small-Firm International Sourcing (DS-PR412, 2011--2024), SSRN \#6661398, DOI 10.2139/ssrn.6661398, 2026.
 \end{thebibliography}
 
 \end{document}

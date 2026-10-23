@@ -1,6 +1,6 @@
 {
   "standard": "OOES-18",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dossier_id": "CASCADE-2026-9F4A2C",
   "tenant_id": "TENANT-FR-IMPORT-75008",
   "created_at": "2026-10-20T08:00:00Z",
@@ -37,7 +37,10 @@
         "accreditation_id": "FR-CHORUS-PRO-REG-75008",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "fbee3d7dee7452dbcca29bd83531c5b8ca01c88929d2abd92995f8df009f71d4"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "496890e1da6fa52c43babda10faf6a25200b01c8088c631255db50ce7dfb1df8",
+        "payload_jcs_sha256": "2880b04c08ded56d867328b9982a2429f68ca391f291d931e3b8825f7599b388",
+        "signature_hex": "48b7f8f4c138e4f5c615c5092f2fa90d946ea3e9ef7eb0d7145421621193afa969f20230f559ce5fddeeed524db54e9e99d7d88579d9693d2969c193d96caa04"
       },
       "fault_codes": []
     },
@@ -69,7 +72,10 @@
         "accreditation_id": "QIMA-ISO17020-2026-1188",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "b600805e6ac760f8e1184db65d3369c21c4e776b17c9bf3ebaa95dc4f0c728a1"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "59f424fb41d4c309df796bc0a8710a554ba9957fb8cf87752d30013361f69446",
+        "payload_jcs_sha256": "69f84e538a91225869efbeb792677e76d453dd47feac59f1b9b4c9218c02de97",
+        "signature_hex": "03a76b1ec88b9fcd85895d4734e0ab382ac0468e5e022c0f804c179f28dee8f6050d9ac67831471cfdad6379cf8eaee5d37495074df897cab3100d8ddd714002"
       },
       "fault_codes": []
     },
@@ -99,7 +105,10 @@
         "accreditation_id": "SGS-17020-BD-0042",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "ad9cbd9c3332d4c5f808f9ac5c154797bef0f421ee1279b8e82232113b79a240"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "8141d3261f0ede07199e30841af27a93ed5f8bff8db75fcd656a9720f8009734",
+        "payload_jcs_sha256": "da4d7d2c9683fadb9dd9247cbb043717eeb8cf2aaaf33f173063977cc89b4d87",
+        "signature_hex": "eac253185ab3d02f31b1a0dee088fdfa5bb17c060fb7841ec6b9242b516c995001b3e06c63587c2765dc34ced31585e093125271aca43ada73079edbe98e8f05"
       },
       "fault_codes": []
     },
@@ -130,7 +139,10 @@
         "accreditation_id": "BD-RJSC-REG-4419",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "85311621de6d4f9023565defa84e279f78368766532a75e826963238f447d756"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "ed104f83cc507e26905b557f159ec547da09850cc3428f459a6b3789d18beabe",
+        "payload_jcs_sha256": "b14c21cb13d00e710e4ad8411019114554474a8b1521d16115e7b405f092b44a",
+        "signature_hex": "623e85160afcd32a9caf360ce91da2f79d835cf8eb415d43c00478fb2dcb1f1d5e9d1aaecddc89aec8ae6260e4be5dfd16a60a35af8f2215495c78671084de02"
       },
       "fault_codes": []
     },
@@ -160,7 +172,10 @@
         "accreditation_id": null,
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "f8a0bbfceba7d82b9e2eb4bf768ca27461bcae0bac931711a850f57f56ca93eb"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "1fb9c8057edbb9ce98399115698bd6d9aa1372c31b96467bc8e74542c9ae4498",
+        "payload_jcs_sha256": "16e65e29501b3aac3982b7f35865bfb544623325d35662411231fb38b63738f5",
+        "signature_hex": "c289a7f534a3db3c66dccfe32fdd2f89bbd155b4cc9730a7c5fd6bf17cfdd048ca596eb5ca2699b0500b4108fbbb560b8267b4c1d50a5c52af1952e24d440702"
       },
       "fault_codes": []
     },
@@ -192,7 +207,10 @@
         "accreditation_id": null,
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "12f35154f9379f00470ab56f5671134841efd14fd30b37283047b75ee0a99b4f"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "1fb9c8057edbb9ce98399115698bd6d9aa1372c31b96467bc8e74542c9ae4498",
+        "payload_jcs_sha256": "63eabc3eb940c650c8d998998e649464e4684f85438097d4f399ecaa14722df9",
+        "signature_hex": "97a7c1d4d0d1ef1ada1adbd436c27f593d1d17f6fbfc7c9803984983c0b51b697012c0660778cb2fbeab8e4441e0b513b6fad45483f4aa204ae62534497d6302"
       },
       "fault_codes": []
     },
@@ -205,16 +223,16 @@
         "capture_device_pubkey_fp": "62321516abbb18ab7e21f7fa21aa85db4d50678d84145737e93c9b2741600006",
         "exif_gps_lat": 24.0005,
         "exif_gps_lon": 90.4208,
-        "max_distance_from_s04_meters": 82.4,
+        "max_distance_from_s04_meters": 83.9,
         "merkle_media_root": "992052d9b6799fe7dac9b570d5744c49136d2f34f2b51b2440fbf5114e47da01"
       },
       "seal": {
         "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
-        "jcs_sha256": "a8d3cb32aa4a9bcd4ece8216ceecc88cc5c65616c4ed59fbf8203e566e8b4e85",
-        "hmac_sha256": "bc305dd9a50ea5a9d3d518daf63f20eccfedafe8833440997d9097747b3a6be5",
+        "jcs_sha256": "f1d01cd868ce4c05988d2fd0677b3620bca687106c0381cf5dd24063ce59ca2a",
+        "hmac_sha256": "8ab93f76988cb7af487c87a09230f5f5b42f9d89bffcff8093ed9a807df5e60b",
         "aes_gcm_iv": "324591ffdeb22a917375c682",
-        "aes_gcm_ciphertext": "912d0284b299339b0307962a49aa26642021867210b89ba01e991262f15e1029c89750156b7aae3262a108a456a1955bb93976332438143e31c030563b15b6edfaf351139a1fb166062545480e6212811377b73fe3c26a030f1ddb87657b93ed0fa1f3177275f3687b5bdcf98e9f5970c1dccbed49e4bd96a94261d9d3b60871b678923b67c18b8d60d02bb73dd5823d8f52aca561925095b995b4c6212924320c636832e271291b3116e30f1790ecf5e6fd7b7b14d1048fc7548bb87c42635a78d08563dacddd1d69fadd3c639ae2a3ea73acfcef8c63ac155ee346aa336300ecbd08277a6be704498adb0f68009941f3d18081bc0eb88e96cce318bd30ce5599cb4bf8adbc10883309f432de7e5696b572a8848de0b3575b",
-        "aes_gcm_tag": "cae016306c79817ab4066c2bea0cdff6",
+        "aes_gcm_ciphertext": "912d0284b299339b0307962a49aa26642021867210b89ba01e991262f15e1029c89750156b7aae3262a108a456a1955bb93976332438143e31c030563b15b6edfaf351139a1fb166062545480e6212811377b73fe3c26a030f1ddb87657b93ed0fa1f3177275f3687b5bdcf98e9f5970c1dccbed49e4bd96a94261d9d3b60871b678923b67c18b8d60d02bb73dd5823d8f52aca561925095b995b4c6212924320c636832e271291b3116e30f1791ecf8e6fd7b7b14d1048fc7548bb87c42635a78d08563dacddd1d69fadd3c639ae2a3ea73acfcef8c63ac155ee346aa336300ecbd08277a6be704498adb0f68009941f3d18081bc0eb88e96cce318bd30ce5599cb4bf8adbc10883309f432de7e5696b572a8848de0b3575b",
+        "aes_gcm_tag": "1087d817969a97772df2ceb079fd693b",
         "sealed_at": "2026-10-20T10:00:00Z"
       },
       "attestation": {
@@ -223,7 +241,10 @@
         "accreditation_id": "SGS-17020-BD-0042",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "ec1a800ac31edc84f877e7a5373237fc0509f09c267a62f86218845d804b154a"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "8141d3261f0ede07199e30841af27a93ed5f8bff8db75fcd656a9720f8009734",
+        "payload_jcs_sha256": "f1d01cd868ce4c05988d2fd0677b3620bca687106c0381cf5dd24063ce59ca2a",
+        "signature_hex": "65221e9d89e4fb25d05dd6a55a4baa943c1053b7f3860b4e37e263ed1ae32e277cc577bebef83b12bae33b6ce24d518c3bae4e02b8be9d0bc81a38b85401c60a"
       },
       "fault_codes": []
     },
@@ -256,7 +277,10 @@
         "accreditation_id": "SGS-17020-BD-0042",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "741f704755d1250b83ab2fdeb349869bf0c0e5949a96eaf0859edd67f297c9ea"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "8141d3261f0ede07199e30841af27a93ed5f8bff8db75fcd656a9720f8009734",
+        "payload_jcs_sha256": "b8cd18acd905c3fb6472162ca6257b44f4862f80944e1f8b33bf1c349bc82501",
+        "signature_hex": "a26385df1fb6ac504595e0bbea848f7499928ca368395f91989943105c82d8556862c9e3fc3767610711adf9e578154331b0091c00833914dfdb019dff418407"
       },
       "fault_codes": []
     },
@@ -288,7 +312,10 @@
         "accreditation_id": "BV-ISO17025-BD-0427",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "b7ad6a0a315637c6754fa37f61775b53d0799dbf9dd3526c0cb95528a6a220c9"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "2b5e8628c1b928bc078cce29a970cf51f3c8ce0a6735f0bf421e4c155dcd63ef",
+        "payload_jcs_sha256": "3a78beaab1ebb495c565db715799123811ade905ca70335105b5f21670bd7485",
+        "signature_hex": "f93b14fc22e41cb7606ddef6059a855550783c4652f048a7f466caac76f4d0f0a2a29b3284434b08e1aeac8cca09eb0442826c164fbdea4c91457e950e0a7706"
       },
       "fault_codes": []
     },
@@ -300,26 +327,30 @@
         "seal_serial_number": "SL-BD-994812",
         "iso17712_clause_6_compliant": true,
         "container_number": "MSCU5829104",
-        "stuffing_lat": 22.3053,
-        "stuffing_lon": 91.8002,
+        "stuffing_location_type": "FACTORY",
+        "stuffing_lat": 24.0002,
+        "stuffing_lon": 90.4205,
         "sealed_at": "2026-10-17T16:40:00Z"
       },
       "seal": {
         "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
-        "jcs_sha256": "07d9b2a7a9fca62c346f7539ddb3c369d32f8bd2e83f3ecb8acb1482bf0bd082",
-        "hmac_sha256": "1cda9f4d18de1c973a468de15d997819ea7fe7e00c1db2d43df99231b624f5b6",
+        "jcs_sha256": "2bf311c94a8459bc139ba464b10290dffcc3c78d8b5549a425dd34531084891f",
+        "hmac_sha256": "d973e8aa0b17e32bf4d93138ef90bbdb0e98a9b0a20a16cdd4ebdefb6ddae122",
         "aes_gcm_iv": "4640bf5226a3643621816569",
-        "aes_gcm_ciphertext": "5c170ee8ecfa3c7a4e3f88ebfcc6b9239820fd215cbdaf5ef68727807add49dc5daed0cb3a6ba1ea40cab1c62aba227d024d451f66a98aafc61ceb68b21cd300c01afb2d35408db456768ebb6763ff905e8fa64b8d53595f3c9e80f0e5842586401443e47522d7f0a00e870e5d8c24f1a10dea2e43d12c88420950de4725c7638ff8735315b1f90857460b1bb8bcf26c3eb003bd2fb46da641c429aa887334010fe13150ffcdec43a16da85bdedaf29d03e3b61aca8d9593fe78",
-        "aes_gcm_tag": "8ecdcc750b46170863ab2f3854b60465",
+        "aes_gcm_ciphertext": "5c170ee8ecfa3c7a4e3f88ebfcc6b9239820fd215cbdaf5ef68727807add49dc5daed0cb3a6ba1ea40cab1c62aba227d024d451f66a98aafc61ceb68b21cd300c01afb2d35408db456768ebb6763ff905e8fa64b8d53595f3c9e80f0e5842586401443e47522d7f0a00e870e5d8c24f1a10dea2e43d12c88420950de4725c7638ff8735315b1f90857460b1bb8bcf26c3eb003bd2fb46da641c429aa8e7337010ae03150ffcdec43a16da85bdedaf29040ade6448aead1dabc60f392957e5dcd6084b84176c133c09b10d473e0b2302d1a1bf6f218c1a5306169ff0fb9",
+        "aes_gcm_tag": "4742074bd77e1eea3487c7462bac4384",
         "sealed_at": "2026-10-20T10:00:00Z"
       },
       "attestation": {
         "attester_type": "ACCREDITED_THIRD_PARTY",
         "authority_name": "SGS Bangladesh Ltd",
-        "accreditation_id": "SGS-ISO17712-BD-0042",
+        "accreditation_id": "SGS-17020-BD-0042",
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "2efde7df2380b102b36599ce6e7ca169427a79e3c565aed9144a7d9da3304083"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "8141d3261f0ede07199e30841af27a93ed5f8bff8db75fcd656a9720f8009734",
+        "payload_jcs_sha256": "2bf311c94a8459bc139ba464b10290dffcc3c78d8b5549a425dd34531084891f",
+        "signature_hex": "8cfc5082517f631e2026ea7303bbd6993c285a8a99b5e5c5d29d665dfbb9053df4377cfcab0abfd6d2c0218a248ee520f578b2fd759da2d71f8394fda5a29304"
       },
       "fault_codes": []
     },
@@ -328,10 +359,11 @@
       "layer": "L4",
       "state": "ASSERTED",
       "payload": {
-        "bl_number": "MAEU260984112",
-        "scac_code": "MAEU",
+        "bl_number": "MSCU260984112",
+        "scac_code": "MSCU",
+        "carrier_name": "Mediterranean Shipping Company",
         "vessel_name": "MSC ISABELLA",
-        "vessel_imo": "9776432",
+        "vessel_imo": "9839272",
         "port_of_loading_unlocode": "BDCGP",
         "port_of_discharge_unlocode": "FRLEH",
         "container_number": "MSCU5829104",
@@ -342,11 +374,11 @@
       },
       "seal": {
         "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
-        "jcs_sha256": "a33c8a1c25158b357c767618d20fdf2b4019698f599f8913a75471c37cc5c7c9",
-        "hmac_sha256": "89c1eccacb8ce601ae5c03cc16da6b2401e888aeddb654c4f8b20374b509b5b4",
+        "jcs_sha256": "2c6c1477c41abdef77ad4d39725138c45d082955dc9c373fb70a2e5e0894b26b",
+        "hmac_sha256": "a7797f01063c4032256e1dade856daf73d517366d696b805cf1d146d15b95d6d",
         "aes_gcm_iv": "eb648cc07f9593c787fa4f6e",
-        "aes_gcm_ciphertext": "d3469d3d91870f7214b42c5ecbf9ad6c33868a19e563879eb0f25b1974371f26397ff0151b6b660976f67d9cabeb4c884e20a0c5165a59fbf715db0d7f136cba343f378e03aa76840fcd6f3079998cf7ae76c17e55f061bd716c07adbf87f7b5df4007f1518978c51bab31de23f59d7dca381b465ea6f0160f11aacbc9bda98f1cdc2bfa28b80ab1d7ba81fe5986b0a21791b208e6fea5a1ba6dc0beb7a506966b61806123235e64348efd1e07b57cce182d8d061e76386759b91e5cd3552bf5832a886ea07b0e6f152652d552b8e232b330f610e265afe130c8e4370f8ef169be52e3b4b44beb04ef43b6f6630a265e83c05bcbe3321164c32050870c4e367ab65407cedb20d5711c20c79f7aa1fb1501c04035fb06be6dd51cc540aac9793d21b91214638d65f65ad1405fe7d69aa14c38",
-        "aes_gcm_tag": "674516706b6c1054b8689e8a7599d9c2",
+        "aes_gcm_ciphertext": "d3469d3d91870f7214b42c5ecbf9ad7e35868a19e563879eb0f25b1974371f263979f61e3657671d75e77d9cbd9e19c00537a9d2055568f1f8249931760878e8672522db25e9399701cd62733cd58ae4836cdb7d68f67cea253a68c4c8eaf2a1cf1a5aa404c50b8812863cc231d88e3a992b014764e1b5575a49ea9290ffee8d2cc02ac825bb27f784ebafc57ba1e2ff7added54bdbfe6e7b83d95ef82a83db64a24c4370c274b3251d7af795bf63fda1e319e06047e0b6c53a51951901d6ed2981ca152ed34437813650ba87785ca12d928f87fd34f88b74385f1000a91e068b363eb859e47e80afe488df72044613efda12eabf3281e26906c02e04d0d7069f11d56e6e43ce93e5f208ed52ae6bc4651ac1d798846a769d40bff4894d37d727eb91a061ce80be723af302580b6f4960b36bd908ec39e653c5a5df20a19f71f52076f065051586588fa31e5d44cf2c390959ee38e9affa3284290bb92bed96da3b4",
+        "aes_gcm_tag": "c08888a24912aff9912621e84134b3dc",
         "sealed_at": "2026-10-20T10:00:00Z"
       },
       "attestation": {
@@ -355,7 +387,10 @@
         "accreditation_id": null,
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "e8df407d8d5d485b7d45ad6eb57b4bd2ea1d782a3f7002a4a8137298e87d4ebd"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "1fb9c8057edbb9ce98399115698bd6d9aa1372c31b96467bc8e74542c9ae4498",
+        "payload_jcs_sha256": "2c6c1477c41abdef77ad4d39725138c45d082955dc9c373fb70a2e5e0894b26b",
+        "signature_hex": "fa4ca6f5734ef683cddf2c7ffcb77bde62238f326c44c7c48e3c421b992f0675733143ef310bd10ff911976a18a3f0e90ab676bd0bfa3d40a66f8f39913ea90d"
       },
       "fault_codes": []
     },
@@ -364,9 +399,12 @@
       "layer": "L4",
       "state": "ASSERTED",
       "payload": {
-        "coo_number": "COO-BD-2026-88419",
-        "issuing_authority": "Chittagong Chamber of Commerce & Industry",
-        "origin_criterion": "WO",
+        "coo_number": "REX-BD-2026-88419",
+        "proof_type": "REX_STATEMENT",
+        "origin_regime": "PREFERENTIAL",
+        "preference_programme": "EU_GSP_EBA",
+        "issuing_authority": "Exporter statement on origin (REX)",
+        "origin_criterion": "CC",
         "country_of_origin_iso2": "BD",
         "exporter_rex_id": "BDREX882190",
         "tier2_yarn_origin_iso2": "IN",
@@ -374,11 +412,11 @@
       },
       "seal": {
         "hkdf_salt": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
-        "jcs_sha256": "f5a1a08d6771203158aa7ad24150e4985e19c1fb6e064d8d2aea596c9e5872d7",
-        "hmac_sha256": "15ecf3d27c6a30bd9333675e840d33b7ee4cf6c147b168592bf37edfe180d6c5",
+        "jcs_sha256": "c9930dfa02f1786a60dc6e0d26e914ee0a94867b7a42fc78687af5e10aea751e",
+        "hmac_sha256": "55e6170176eb52fd72ab31a6ae3ef33dffb8586a2bbd16e6265f376f4c4f6ebd",
         "aes_gcm_iv": "ebda73a558c3ffb30c55af9f",
-        "aes_gcm_ciphertext": "c5823e5c53d6ba5024a215cd6e4e5f35a22620b6da877a30851c3dfa76acb62207f5558fbc531ef3096b5df1aab1a4705cab25bbe4c974fa85bae421bf2b9bded4d79a4beadf64995c150a02afa86a6c3d27d907f488da2c0bd35ef5cc953ed7c86b852d92ebde77edf9fc84dae3f022e374758934b6125868b092ddaa20c05291b9115d4615e16dda1efc14902800820ca20975881a0cfa82353a445c95d42d30ea5183cace6ea5acee209c5d06a183faac1fb3e91cc0cec5b3d5eb29acddfaa43fe6c02e0e91aee096c96170f6bd0738fcfa8fe8fe9cf357f7d5cfa9d991fa674d2be0f535225c485db5852ecef0f7e7806ae265da8da8fd836cff",
-        "aes_gcm_tag": "e2ba8ebbf85625308a4c70aa06fb086f",
+        "aes_gcm_ciphertext": "c5823e5c53d6ba5024a215cd6e4e5f24a83120b6da877a30851c3dfa76acb62207f5558fbc531ef3096b5df1aab1a4705cab25bbe4c974fa85bae421bf2b9bded4d79a4beadf64995c150a02afa86a6c3d27d907f488da2c0bd35ef5cc953ed7c86b852d92ebde77edf9fc84dae3f022e374758934b0024173b687dfb76ed406b3a5155d411ee76dda16fc388d2c0a8e10e14407eb626cb6ca622642478b9f6f4de65183d9c27293a0f26bd21a378bceb8ac4ae3d7348b8cb8b5d9e932f3e7a1ff6fd8cd043abd9bccb6c24142d5ad0920aec1a4acb7cce250f1c2a386d99fea4a4127f9f565711f615785b014f9c6dcfaa83ba17588c5e5c7b611f678e0e8036b3fceb18fabea6ba54f1df5fa5123b3ebab1ebac7f7d6974fcc9bf60870eeed18d8f1cf813b93011364b34c4d90f82eae86ec7a921dba73ca95793180006f1a0f0e7711512759e9b839ae8a9f6c471599b7cba9ce",
+        "aes_gcm_tag": "6c5acebb71d64e83d4daecb8b10b95c8",
         "sealed_at": "2026-10-20T10:00:00Z"
       },
       "attestation": {
@@ -387,7 +425,10 @@
         "accreditation_id": null,
         "attested_at": "2026-10-19T09:30:00Z",
         "expires_at": "2027-12-31T23:59:59Z",
-        "signature_hex": "f704f81ba3a392a46c268146abf9ba082448d26b247488c6549b1dfac1a01136"
+        "signature_algorithm": "Ed25519",
+        "attester_public_key_hex": "1fb9c8057edbb9ce98399115698bd6d9aa1372c31b96467bc8e74542c9ae4498",
+        "payload_jcs_sha256": "c9930dfa02f1786a60dc6e0d26e914ee0a94867b7a42fc78687af5e10aea751e",
+        "signature_hex": "55fae9626624d045d025f71bf318b596570245552ebd59a51749088218390565f9be26cd03f631c4c53bde16d61ac3092a6f92a4a491d240212951edb849c301"
       },
       "fault_codes": []
     },
@@ -447,12 +488,12 @@
     }
   },
   "blind_index": {
-    "normalized_tuple": "MAEU260984112|MSCU5829104|BDBIN0049182730101|2026-10-12",
-    "blind_index_hex": "c1d26a183bd01045931d072f8832624a5d31e5a36c768c276d5425d0907ba4d5",
+    "normalized_tuple": "MSCU260984112|MSCU5829104|BDBIN0049182730101|2026-10-12",
+    "blind_index_hex": "3eea022417dbb6dcbefca0e1e7c3c4f0c1fe764c0b017a957324e2e54f1b4125",
     "registry_salt_id": "OOES-18-NETWORK-REGISTRY-2026-Q4"
   },
-  "dossier_state_root": "a426317f4ddc9f4ca7a86e36baa2c53099abbc600af6fa9635ee9b2ce5473321",
-  "slot_digests_map_hash": "7fe335b525f0a87a13d248ff8c8f3caddb55ae9dd0ad303389c8a8338aa87405",
+  "dossier_state_root": "d2eb349888a12a9b921cbf003931eca19821a34906c86d6d9c93d11621a67893",
+  "slot_digests_map_hash": "728346a89cacaa555faed7b75cc6991a4d241433a1cc77b76263e07ccb7f611e",
   "institutional_views": {
     "pre_wire_gate": {
       "gate_id": "GATE_01_DEPOSIT_PRE_WIRE",
@@ -499,8 +540,8 @@
             "L2.S04_SUPPLIER_KYB",
             "L2.S05_REGISTRY_STANDING"
           ],
-          "status": "PASS",
-          "detail": "Container, origin, and REX identifier data are mutually non-contradictory."
+          "status": "NOT_EVALUATED",
+          "detail": "One or more cross-document data elements are missing or contradictory."
         },
         {
           "reference": "UCP 600 Art. 18 / ISBP 821 Para. C1",
@@ -519,8 +560,8 @@
             "L4.S10_BOLT_SEAL",
             "L4.S11_BILL_OF_LADING"
           ],
-          "status": "PASS",
-          "detail": "Container continuity holds and the transport document is clean on board."
+          "status": "NOT_EVALUATED",
+          "detail": "Transport document continuity or clean-on-board status is not established."
         },
         {
           "reference": "UCP 600 Art. 27",
@@ -528,8 +569,8 @@
           "source_slots": [
             "L4.S11_BILL_OF_LADING"
           ],
-          "status": "PASS",
-          "detail": "Bill of lading is marked clean on board under UCP 600 Art. 27."
+          "status": "NOT_EVALUATED",
+          "detail": "Source slot(s) not corroborated: L4.S11_BILL_OF_LADING."
         },
         {
           "reference": "UCP 600 Art. 30",
@@ -549,17 +590,8 @@
             "L2.S05_REGISTRY_STANDING",
             "L4.S12_CERTIFICATE_OF_ORIGIN"
           ],
-          "status": "PASS",
-          "detail": "Origin country and exporter REX identifier are consistent across documents."
-        },
-        {
-          "reference": "ISBP 821 Para. K1",
-          "requirement": "Insurance and freight charges added to the FOB value must be separately identifiable for CIF customs valuation.",
-          "source_slots": [
-            "L5.S14_LANDED_VALUATION"
-          ],
           "status": "NOT_EVALUATED",
-          "detail": "Landed valuation slot is not corroborated."
+          "detail": "Origin country or REX identifier consistency is not established."
         }
       ],
       "generated_at": "2026-10-20T12:00:00Z"
@@ -595,9 +627,9 @@
           "status": "PENDING",
           "values": {
             "invoice_number": null,
-            "bill_of_lading": "MAEU260984112",
+            "bill_of_lading": "MSCU260984112",
             "lab_report_number": "BV-CPS-2026-10-88419",
-            "origin_certificate": "COO-BD-2026-88419"
+            "origin_certificate": "REX-BD-2026-88419"
           }
         },
         {
@@ -626,7 +658,7 @@
         },
         {
           "de": "DE 14 03",
-          "name": "Customs value and Incoterms addition/deduction breakdown",
+          "name": "Customs value and Incoterms addition/deduction breakdown (UCC Art. 70/71)",
           "source_slots": [
             "L5.S14_LANDED_VALUATION"
           ],
@@ -648,7 +680,9 @@
           "status": "PENDING",
           "values": {
             "country_of_origin_iso2": "BD",
-            "origin_criterion": "WO",
+            "origin_criterion": "CC",
+            "origin_regime": "PREFERENTIAL",
+            "proof_type": "REX_STATEMENT",
             "exporter_rex_id": "BDREX882190"
           }
         },

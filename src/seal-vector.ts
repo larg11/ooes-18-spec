@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   SLOT_LAYER,
+  attestationMessage,
   computeBlindIndex,
   computeDossierMerkleRoot,
   computeJcsSha256,
@@ -12,7 +13,10 @@ import {
   deriveSlotKey,
   encryptSlotPayload,
   evaluateReleaseGates,
+  haversineMeters,
   type AttestationMetadata,
+  type AttesterTrustEntry,
+  type AttesterTrustStore,
   type AttesterType,
   type OOES18Dossier,
   type SlotEnvelope,
@@ -34,7 +38,7 @@ const SEALED_AT = "2026-10-20T10:00:00Z";
 const ATTESTED_AT = "2026-10-19T09:30:00Z";
 const ATTESTATION_EXPIRES_AT = "2027-12-31T23:59:59Z";
 
-const BL_NUMBER = "MAEU260984112";
+const BL_NUMBER = "MSCU260984112";
 const CONTAINER_NUMBER = "MSCU5829104";
 const SUPPLIER_TAX_ID = "BD-BIN-004918273-0101";
 const INVOICE_DATE = "2026-10-12";
@@ -51,18 +55,52 @@ interface AttesterSpec {
   type: AttesterType;
   authority: string;
   accreditationId: string | null;
+  keyLabel: string;
 }
 
-function makeAttestation(slotKey: Buffer, spec: AttesterSpec): AttestationMetadata {
-  const unsigned = {
+const ED25519_PKCS8_PREFIX = "302e020100300506032b657004220420";
+
+function testPrivateKey(keyLabel: string): crypto.KeyObject {
+  const seed = crypto
+    .createHash("sha256")
+    .update(`OOES-18|TEST-ED25519|${keyLabel}`, "utf8")
+    .digest();
+  return crypto.createPrivateKey({
+    key: Buffer.concat([Buffer.from(ED25519_PKCS8_PREFIX, "hex"), seed]),
+    format: "der",
+    type: "pkcs8"
+  });
+}
+
+function testPublicKeyHex(privateKey: crypto.KeyObject): string {
+  const spki = crypto
+    .createPublicKey(privateKey)
+    .export({ type: "spki", format: "der" });
+  return Buffer.from(spki).subarray(-32).toString("hex");
+}
+
+function makeAttestation(
+  slotId: SlotId,
+  payloadJcsSha256: string,
+  spec: AttesterSpec
+): AttestationMetadata {
+  const privateKey = testPrivateKey(spec.keyLabel);
+  const unsigned: AttestationMetadata = {
     attester_type: spec.type,
     authority_name: spec.authority,
     accreditation_id: spec.accreditationId,
     attested_at: ATTESTED_AT,
-    expires_at: ATTESTATION_EXPIRES_AT
+    expires_at: ATTESTATION_EXPIRES_AT,
+    signature_algorithm: "Ed25519",
+    attester_public_key_hex: testPublicKeyHex(privateKey),
+    payload_jcs_sha256: payloadJcsSha256,
+    signature_hex: ""
   };
-  const signature_hex = computeSlotDigest(slotKey, unsigned);
-  return { ...unsigned, signature_hex };
+  const message = attestationMessage(slotId, payloadJcsSha256, unsigned);
+  unsigned.signature_hex = crypto
+    .sign(null, Buffer.from(message, "utf8"), privateKey)
+    .toString("hex");
+  return unsigned;
 }
 
 function sealedSlot(
@@ -83,7 +121,7 @@ function sealedSlot(
     state,
     payload
   );
-  const attestation = makeAttestation(slotKey, attester);
+  const attestation = makeAttestation(slotId, jcs_sha256, attester);
 
   return {
     slot_id: slotId,
@@ -119,20 +157,115 @@ function unknownSlot(slotId: SlotId): SlotEnvelope {
 const AUTHORITY_SOVEREIGN = (authority: string, accreditationId: string): AttesterSpec => ({
   type: "SOVEREIGN_AUTHORITY",
   authority,
-  accreditationId
+  accreditationId,
+  keyLabel: accreditationId
 });
 
 const THIRD_PARTY = (authority: string, accreditationId: string): AttesterSpec => ({
   type: "ACCREDITED_THIRD_PARTY",
   authority,
-  accreditationId
+  accreditationId,
+  keyLabel: accreditationId
 });
 
 const SELF_DECLARED: AttesterSpec = {
   type: "PARTY_SELF_DECLARATION",
   authority: "Exporter self-declaration (signature verified at upload)",
-  accreditationId: null
+  accreditationId: null,
+  keyLabel: "SELF"
 };
+
+interface TrustSpec {
+  authority_name: string;
+  accreditation_id: string;
+  keyLabel: string;
+  scopes: string[];
+}
+
+const TRUST_SPECS: TrustSpec[] = [
+  {
+    authority_name: "DGFiP Chorus Pro (France)",
+    accreditation_id: "FR-CHORUS-PRO-REG-75008",
+    keyLabel: "FR-CHORUS-PRO-REG-75008",
+    scopes: ["L1.S01_PURCHASE_ORDER"]
+  },
+  {
+    authority_name: "QIMA Limited",
+    accreditation_id: "QIMA-ISO17020-2026-1188",
+    keyLabel: "QIMA-ISO17020-2026-1188",
+    scopes: ["L1.S02_TECH_PACK", "L2.S06_CAPACITY_ATTESTATION"]
+  },
+  {
+    authority_name: "SGS Bangladesh Ltd",
+    accreditation_id: "SGS-17020-BD-0042",
+    keyLabel: "SGS-17020-BD-0042",
+    scopes: [
+      "L1.S03_GOLDEN_SAMPLE",
+      "L3.S07_PRODUCTION_PHOTOS",
+      "L3.S08_INLINE_AQL",
+      "L4.S10_BOLT_SEAL",
+      "L5.S16_PSI_REPORT"
+    ]
+  },
+  {
+    authority_name: "Bangladesh RJSC / NBR",
+    accreditation_id: "BD-RJSC-REG-4419",
+    keyLabel: "BD-RJSC-REG-4419",
+    scopes: ["L2.S04_SUPPLIER_KYB"]
+  },
+  {
+    authority_name: "BGMEA REX Registry API",
+    accreditation_id: "BD-REX-API-882190",
+    keyLabel: "BD-REX-API-882190",
+    scopes: ["L2.S05_REGISTRY_STANDING"]
+  },
+  {
+    authority_name: "Bureau Veritas CPS Dhaka",
+    accreditation_id: "BV-ISO17025-BD-0427",
+    keyLabel: "BV-ISO17025-BD-0427",
+    scopes: ["L3.S09_LAB_CERTIFICATE"]
+  },
+  {
+    authority_name: "MSC eBL Registry",
+    accreditation_id: "MSCU-EBL-REG-2026",
+    keyLabel: "MSCU-EBL-REG-2026",
+    scopes: ["L4.S11_BILL_OF_LADING"]
+  },
+  {
+    authority_name: "Chittagong Chamber / REX Portal",
+    accreditation_id: "BD-REX-PORTAL-2026",
+    keyLabel: "BD-REX-PORTAL-2026",
+    scopes: ["L4.S12_CERTIFICATE_OF_ORIGIN"]
+  },
+  {
+    authority_name: "French Customs Valuation API",
+    accreditation_id: "FR-DOUANE-VAL-2026",
+    keyLabel: "FR-DOUANE-VAL-2026",
+    scopes: ["L5.S14_LANDED_VALUATION"]
+  },
+  {
+    authority_name: "French Customs TARIC API",
+    accreditation_id: "FR-DOUANE-TARIC-2026",
+    keyLabel: "FR-DOUANE-TARIC-2026",
+    scopes: ["L5.S15_DUTY_CALCULATION"]
+  }
+];
+
+function buildTrustStore(): AttesterTrustStore {
+  return {
+    version: "1.1.0",
+    test_only: true,
+    note: "Test fixture only. These Ed25519 keys are derived from public labels and must not be used in production. A production trust store is maintained by the relying institution or an accreditation registry.",
+    attesters: TRUST_SPECS.map((spec) => ({
+      authority_name: spec.authority_name,
+      accreditation_id: spec.accreditation_id,
+      public_key_hex: testPublicKeyHex(testPrivateKey(spec.keyLabel)),
+      valid_from: "2026-01-01T00:00:00Z",
+      valid_until: "2027-12-31T23:59:59Z",
+      scopes: spec.scopes
+    }))
+  };
+}
 
 const purchaseOrder = {
   po_number: "PO-LEH-2026-10-004418",
@@ -188,12 +321,22 @@ const capacityAttestation = {
   tier2_mill_tax_ids: ["BD-BIN-009127364-0202", "BD-BIN-007731095-0303"]
 };
 
+const PRODUCTION_LAT = 24.0005;
+const PRODUCTION_LON = 90.4208;
+
 const productionPhotos = {
   media_count: 42,
   capture_device_pubkey_fp: sha256Hex("OOES-18|DEVICE|SGS-BD-CAM-0042"),
-  exif_gps_lat: 24.0005,
-  exif_gps_lon: 90.4208,
-  max_distance_from_s04_meters: 82.4,
+  exif_gps_lat: PRODUCTION_LAT,
+  exif_gps_lon: PRODUCTION_LON,
+  max_distance_from_s04_meters: Number(
+    haversineMeters(
+      supplierKyb.factory_lat,
+      supplierKyb.factory_lon,
+      PRODUCTION_LAT,
+      PRODUCTION_LON
+    ).toFixed(1)
+  ),
   merkle_media_root: sha256Hex("OOES-18|MEDIA-MERKLE|CASCADE-2026-9F4A2C|42")
 };
 
@@ -222,16 +365,18 @@ const boltSeal = {
   seal_serial_number: "SL-BD-994812",
   iso17712_clause_6_compliant: true,
   container_number: CONTAINER_NUMBER,
-  stuffing_lat: 22.3053,
-  stuffing_lon: 91.8002,
+  stuffing_location_type: "FACTORY",
+  stuffing_lat: 24.0002,
+  stuffing_lon: 90.4205,
   sealed_at: "2026-10-17T16:40:00Z"
 };
 
 const billOfLading = {
   bl_number: BL_NUMBER,
-  scac_code: "MAEU",
+  scac_code: "MSCU",
+  carrier_name: "Mediterranean Shipping Company",
   vessel_name: "MSC ISABELLA",
-  vessel_imo: "9776432",
+  vessel_imo: "9839272",
   port_of_loading_unlocode: "BDCGP",
   port_of_discharge_unlocode: "FRLEH",
   container_number: CONTAINER_NUMBER,
@@ -242,9 +387,12 @@ const billOfLading = {
 };
 
 const certificateOfOrigin = {
-  coo_number: "COO-BD-2026-88419",
-  issuing_authority: "Chittagong Chamber of Commerce & Industry",
-  origin_criterion: "WO",
+  coo_number: "REX-BD-2026-88419",
+  proof_type: "REX_STATEMENT",
+  origin_regime: "PREFERENTIAL",
+  preference_programme: "EU_GSP_EBA",
+  issuing_authority: "Exporter statement on origin (REX)",
+  origin_criterion: "CC",
   country_of_origin_iso2: "BD",
   exporter_rex_id: "BDREX882190",
   tier2_yarn_origin_iso2: "IN",
@@ -310,7 +458,7 @@ const slots: Record<string, SlotEnvelope> = {
     "L4.S10_BOLT_SEAL",
     "CORROBORATED",
     boltSeal,
-    THIRD_PARTY("SGS Bangladesh Ltd", "SGS-ISO17712-BD-0042")
+    THIRD_PARTY("SGS Bangladesh Ltd", "SGS-17020-BD-0042")
   ),
   "L4.S11_BILL_OF_LADING": sealedSlot(
     "L4.S11_BILL_OF_LADING",
@@ -342,7 +490,7 @@ const blindIndex = computeBlindIndex(
 
 const dossier: OOES18Dossier = {
   standard: "OOES-18",
-  version: "1.0.0",
+  version: "1.1.0",
   dossier_id: DOSSIER_ID,
   tenant_id: TENANT_ID,
   created_at: CREATED_AT,
@@ -358,7 +506,13 @@ const dossier: OOES18Dossier = {
   slot_digests_map_hash: computeSlotDigestsMapHash(slots)
 };
 
-const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+const trustStore = buildTrustStore();
+const evaluation = evaluateReleaseGates(
+  dossier,
+  MASTER_SECRET_HEX,
+  REFERENCE_TIME,
+  trustStore
+);
 dossier.institutional_views = evaluation.institutional_views;
 
 const counts = {
@@ -376,11 +530,15 @@ if (counts.CORROBORATED !== 8 || counts.ASSERTED !== 4 || counts.UNKNOWN !== 6) 
 const here = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(here, "../..");
 const outputPath = resolve(repositoryRoot, "vectors", "CASCADE-2026-9F4A2C.dossier.json");
+const trustPath = resolve(repositoryRoot, "trust", "attesters.json");
 mkdirSync(dirname(outputPath), { recursive: true });
+mkdirSync(dirname(trustPath), { recursive: true });
 writeFileSync(outputPath, `${JSON.stringify(dossier, null, 2)}\n`, "utf8");
+writeFileSync(trustPath, `${JSON.stringify(trustStore, null, 2)}\n`, "utf8");
 
 console.log("OOES-18 deterministic test vector");
 console.log(`  output           : ${outputPath}`);
+console.log(`  trust store      : ${trustPath}`);
 console.log(`  dossier_id       : ${dossier.dossier_id}`);
 console.log(`  slot states      : 8 CORROBORATED / 4 ASSERTED / 6 UNKNOWN`);
 console.log(`  state root       : ${dossier.dossier_state_root}`);

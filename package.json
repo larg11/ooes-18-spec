@@ -1,6 +1,6 @@
 {
   "name": "ooes-18-spec",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "OOES-18: An Open Deterministic Evidence Schema for EU Regulation 2024/3015 and French DELTA IE (H1) Pre-Clearance",
@@ -16,6 +16,8 @@
     "deterministic-verification",
     "rfc-8785",
     "rfc-5869",
+    "ed25519",
+    "trust-store",
     "blind-index"
   ],
   "author": {
@@ -33,6 +35,7 @@
     "seal-vector": "npm run build && node dist/src/seal-vector.js",
     "test": "npm run build && node --test dist/tests/verifier.test.js",
     "verify": "npm run build && node dist/src/cli.js verify",
+    "verify-attestations": "npm run build && node dist/src/cli.js verify-attestations",
     "tamper-demo": "npm run build && node dist/src/cli.js tamper-demo"
   },
   "devDependencies": {

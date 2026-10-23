@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
+  attestationMessage,
   computeBlindIndex,
   computeDossierMerkleRoot,
   computeJcsSha256,
@@ -14,6 +15,7 @@ import {
   verifyDossierSeals,
   canonicalizeJCS,
   type AttestationMetadata,
+  type AttesterTrustStore,
   type AttesterType,
   type EpistemicState,
   type OOES18Dossier,
@@ -27,6 +29,7 @@ const NETWORK_REGISTRY_SALT_HEX =
   "f0e1d2c3b4a5968778695a4b3c2d1e0ff0e1d2c3b4a5968778695a4b3c2d1e0f";
 
 const VECTOR_PATH = resolve(process.cwd(), "vectors", "CASCADE-2026-9F4A2C.dossier.json");
+const TRUST_PATH = resolve(process.cwd(), "trust", "attesters.json");
 
 const S01 = "L1.S01_PURCHASE_ORDER";
 const S02 = "L1.S02_TECH_PACK";
@@ -41,21 +44,57 @@ const S11 = "L4.S11_BILL_OF_LADING";
 const S12 = "L4.S12_CERTIFICATE_OF_ORIGIN";
 const S14 = "L5.S14_LANDED_VALUATION";
 const S15 = "L5.S15_DUTY_CALCULATION";
+const S16 = "L5.S16_PSI_REPORT";
 
 function loadVector(): OOES18Dossier {
   return JSON.parse(readFileSync(VECTOR_PATH, "utf8")) as OOES18Dossier;
+}
+
+function loadTrustStore(): AttesterTrustStore {
+  return JSON.parse(readFileSync(TRUST_PATH, "utf8")) as AttesterTrustStore;
 }
 
 function cloneVector(): OOES18Dossier {
   return structuredClone(loadVector());
 }
 
+const ED25519_PKCS8_PREFIX = "302e020100300506032b657004220420";
+
+function testPrivateKey(keyLabel: string): crypto.KeyObject {
+  const seed = crypto
+    .createHash("sha256")
+    .update(`OOES-18|TEST-ED25519|${keyLabel}`, "utf8")
+    .digest();
+  return crypto.createPrivateKey({
+    key: Buffer.concat([Buffer.from(ED25519_PKCS8_PREFIX, "hex"), seed]),
+    format: "der",
+    type: "pkcs8"
+  });
+}
+
+function testPublicKeyHex(privateKey: crypto.KeyObject): string {
+  const spki = crypto
+    .createPublicKey(privateKey)
+    .export({ type: "spki", format: "der" });
+  return Buffer.from(spki).subarray(-32).toString("hex");
+}
+
 function attestationSpec(
   type: AttesterType,
   authority: string,
   accreditationId: string | null
-): { type: AttesterType; authority: string; accreditationId: string | null } {
-  return { type, authority, accreditationId };
+): {
+  type: AttesterType;
+  authority: string;
+  accreditationId: string | null;
+  keyLabel: string;
+} {
+  return {
+    type,
+    authority,
+    accreditationId,
+    keyLabel: accreditationId ?? "SELF"
+  };
 }
 
 function resealSlot(
@@ -63,7 +102,12 @@ function resealSlot(
   slotId: SlotId,
   state: EpistemicState,
   payload: Record<string, unknown>,
-  attester: { type: AttesterType; authority: string; accreditationId: string | null }
+  attester: {
+    type: AttesterType;
+    authority: string;
+    accreditationId: string | null;
+    keyLabel: string;
+  }
 ): void {
   const slotKey = deriveSlotKey(
     MASTER_SECRET_HEX,
@@ -81,16 +125,24 @@ function resealSlot(
     .slice(0, 24);
   const encrypted = encryptSlotPayload(slotKey, iv, dossier.dossier_id, slotId, state, payload);
 
-  const unsignedAttestation = {
+  const privateKey = testPrivateKey(attester.keyLabel);
+  const unsignedAttestation: AttestationMetadata = {
     attester_type: attester.type,
     authority_name: attester.authority,
     accreditation_id: attester.accreditationId,
     attested_at: "2026-10-20T09:00:00Z",
-    expires_at: "2027-12-31T23:59:59Z"
+    expires_at: "2027-12-31T23:59:59Z",
+    signature_algorithm: "Ed25519",
+    attester_public_key_hex: testPublicKeyHex(privateKey),
+    payload_jcs_sha256: jcsSha,
+    signature_hex: ""
   };
+  const message = attestationMessage(slotId, jcsSha, unsignedAttestation);
   const attestation: AttestationMetadata = {
     ...unsignedAttestation,
-    signature_hex: computeSlotDigest(slotKey, unsignedAttestation)
+    signature_hex: crypto
+      .sign(null, Buffer.from(message, "utf8"), privateKey)
+      .toString("hex")
   };
 
   dossier.slots[slotId] = {
@@ -145,7 +197,7 @@ function buildReadyDossier(): OOES18Dossier {
     S11 as SlotId,
     "CORROBORATED",
     existing(S11),
-    attestationSpec("CARRIER_REGISTRY", "Maersk eBL Registry", "MAEU-EBL-REG-2026")
+    attestationSpec("CARRIER_REGISTRY", "MSC eBL Registry", "MSCU-EBL-REG-2026")
   );
   resealSlot(
     dossier,
@@ -184,6 +236,20 @@ function buildReadyDossier(): OOES18Dossier {
     },
     attestationSpec("SOVEREIGN_AUTHORITY", "French Customs TARIC API", "FR-DOUANE-TARIC-2026")
   );
+  resealSlot(
+    dossier,
+    S16 as SlotId,
+    "CORROBORATED",
+    {
+      psi_agency: "SGS Bangladesh Ltd",
+      certificate_number: "PSI-BD-2026-88419",
+      verified_carton_count: 480,
+      verified_units_count: 12000,
+      verified_gross_weight_kg: 6480,
+      verified_seal_serial: "SL-BD-994812"
+    },
+    attestationSpec("ACCREDITED_THIRD_PARTY", "SGS Bangladesh Ltd", "SGS-17020-BD-0042")
+  );
 
   finalizeDossier(dossier);
   return dossier;
@@ -198,7 +264,7 @@ function gate2AfterMutation(mutator: (dossier: OOES18Dossier) => void): {
   const dossier = buildReadyDossier();
   mutator(dossier);
   finalizeDossier(dossier);
-  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
   const gate2 = evaluation.gates.GATE_02_BALANCE_AND_PRE_CLEARANCE;
   return {
     verdict: gate2.verdict,
@@ -282,7 +348,7 @@ test("2. HKDF-SHA256 domain separation isolates tenant, dossier, and slot keys",
 
 test("3. CASCADE-2026-9F4A2C authentic vector passes all seal checks", () => {
   const dossier = loadVector();
-  const report = verifyDossierSeals(dossier, MASTER_SECRET_HEX);
+  const report = verifyDossierSeals(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
 
   assert.equal(report.ok, true, JSON.stringify(report.errors));
   assert.equal(report.all_seals_valid, true);
@@ -298,7 +364,13 @@ test("3. CASCADE-2026-9F4A2C authentic vector passes all seal checks", () => {
 });
 
 test("4. Default vector deterministically HARD_STOPs both gates with exact slot sets", () => {
-  const evaluation = evaluateReleaseGates(loadVector(), MASTER_SECRET_HEX);
+  const vector = loadVector();
+  const evaluation = evaluateReleaseGates(
+    vector,
+    MASTER_SECRET_HEX,
+    vector.reference_time,
+    loadTrustStore()
+  );
   const gate1 = evaluation.gates.GATE_01_DEPOSIT_PRE_WIRE;
   const gate2 = evaluation.gates.GATE_02_BALANCE_AND_PRE_CLEARANCE;
 
@@ -307,7 +379,7 @@ test("4. Default vector deterministically HARD_STOPs both gates with exact slot 
   assert.ok(gate1.halt_reasons.some((reason) => reason.code === "ERR_SLOT_ASSERTED"));
 
   assert.equal(gate2.verdict, "HARD_STOP");
-  assert.deepEqual(gate2.uncorroborated_slots, [S11, S12, S14, S15]);
+  assert.deepEqual(gate2.uncorroborated_slots, [S05, S11, S12, S14, S15, S16]);
   assert.ok(gate2.halt_reasons.some((reason) => reason.code === "ERR_SLOT_ASSERTED"));
   assert.ok(gate2.halt_reasons.some((reason) => reason.code === "ERR_SLOT_UNKNOWN"));
 
@@ -317,7 +389,7 @@ test("4. Default vector deterministically HARD_STOPs both gates with exact slot 
 
 test("5. Full corroboration promotion drives GATE_01 and GATE_02 to READY", () => {
   const dossier = buildReadyDossier();
-  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
 
   assert.equal(evaluation.seal_verification.ok, true, JSON.stringify(evaluation.seal_verification.errors));
   assert.equal(evaluation.gates.GATE_01_DEPOSIT_PRE_WIRE.verdict, "READY");
@@ -347,7 +419,7 @@ test("6a. Container discontinuity rejects a fully corroborated dossier", () => {
       S11 as SlotId,
       "CORROBORATED",
       payload,
-      attestationSpec("CARRIER_REGISTRY", "Maersk eBL Registry", "MAEU-EBL-REG-2026")
+      attestationSpec("CARRIER_REGISTRY", "MSC eBL Registry", "MSCU-EBL-REG-2026")
     );
   });
 
@@ -398,23 +470,150 @@ test("6c. CIF arithmetic error rejects a fully corroborated dossier", () => {
   assert.ok(result.codes.includes("ERR_SEMANTIC_CIF_ARITHMETIC"));
 });
 
+test("6d. Factory stuffing outside the 500 m geofence rejects the dossier", () => {
+  const result = gate2AfterMutation((dossier) => {
+    const payload = dossier.slots[S10]?.payload;
+    assert.ok(payload);
+    payload.stuffing_lat = 22.3053;
+    payload.stuffing_lon = 91.8002;
+    resealSlot(
+      dossier,
+      S10 as SlotId,
+      "CORROBORATED",
+      payload,
+      attestationSpec("ACCREDITED_THIRD_PARTY", "SGS Bangladesh Ltd", "SGS-17020-BD-0042")
+    );
+  });
+
+  assert.equal(result.sealsOk, true);
+  assert.deepEqual(result.uncorroborated, []);
+  assert.equal(result.verdict, "HARD_STOP");
+  assert.ok(result.codes.includes("ERR_SEMANTIC_STUFFING_GEOFENCE"));
+});
+
+test("6e. WO origin criterion with imported inputs rejects the dossier", () => {
+  const result = gate2AfterMutation((dossier) => {
+    const payload = dossier.slots[S12]?.payload;
+    assert.ok(payload);
+    payload.origin_criterion = "WO";
+    resealSlot(
+      dossier,
+      S12 as SlotId,
+      "CORROBORATED",
+      payload,
+      attestationSpec("SOVEREIGN_AUTHORITY", "Chittagong Chamber / REX Portal", "BD-REX-PORTAL-2026")
+    );
+  });
+
+  assert.equal(result.sealsOk, true);
+  assert.deepEqual(result.uncorroborated, []);
+  assert.equal(result.verdict, "HARD_STOP");
+  assert.ok(result.codes.includes("ERR_SEMANTIC_ORIGIN_CRITERION"));
+});
+
+test("6f. Carrier/SCAC mismatch rejects the dossier", () => {
+  const result = gate2AfterMutation((dossier) => {
+    const payload = dossier.slots[S11]?.payload;
+    assert.ok(payload);
+    payload.scac_code = "MAEU";
+    resealSlot(
+      dossier,
+      S11 as SlotId,
+      "CORROBORATED",
+      payload,
+      attestationSpec("CARRIER_REGISTRY", "MSC eBL Registry", "MSCU-EBL-REG-2026")
+    );
+  });
+
+  assert.equal(result.sealsOk, true);
+  assert.deepEqual(result.uncorroborated, []);
+  assert.equal(result.verdict, "HARD_STOP");
+  assert.ok(result.codes.includes("ERR_SEMANTIC_CARRIER_MISMATCH"));
+});
+
+test("6g. A valid Ed25519 signature from an untrusted key is rejected", () => {
+  const dossier = buildReadyDossier();
+  const payload = dossier.slots[S09]?.payload;
+  assert.ok(payload);
+  resealSlot(
+    dossier,
+    S09 as SlotId,
+    "CORROBORATED",
+    payload,
+    attestationSpec("ACCREDITED_THIRD_PARTY", "Rogue Labs", "ROGUE-LAB-001")
+  );
+  finalizeDossier(dossier);
+
+  const evaluation = evaluateReleaseGates(
+    dossier,
+    MASTER_SECRET_HEX,
+    dossier.reference_time,
+    loadTrustStore()
+  );
+  const report = evaluation.seal_verification.slots.find((slot) => slot.slot_id === S09);
+  assert.ok(report);
+  assert.equal(report.effective_state, "UNKNOWN");
+  assert.ok(report.fault_codes.includes("ERR_ATTESTATION_UNTRUSTED"));
+  assert.equal(evaluation.gates.GATE_02_BALANCE_AND_PRE_CLEARANCE.verdict, "HARD_STOP");
+});
+
+test("6h. A mutated attestation signature is rejected", () => {
+  const dossier = buildReadyDossier();
+  const attestation = dossier.slots[S09]?.attestation;
+  assert.ok(attestation);
+  attestation.signature_hex =
+    (attestation.signature_hex[0] === "0" ? "1" : "0") + attestation.signature_hex.slice(1);
+
+  const evaluation = evaluateReleaseGates(
+    dossier,
+    MASTER_SECRET_HEX,
+    dossier.reference_time,
+    loadTrustStore()
+  );
+  const report = evaluation.seal_verification.slots.find((slot) => slot.slot_id === S09);
+  assert.ok(report);
+  assert.equal(report.effective_state, "UNKNOWN");
+  assert.ok(report.fault_codes.includes("ERR_ATTESTATION_SIGNATURE_INVALID"));
+  assert.equal(evaluation.gates.GATE_02_BALANCE_AND_PRE_CLEARANCE.verdict, "HARD_STOP");
+});
+
+test("6i. A REX statement under a non-preferential regime is rejected", () => {
+  const result = gate2AfterMutation((dossier) => {
+    const payload = dossier.slots[S12]?.payload;
+    assert.ok(payload);
+    payload.origin_regime = "NON_PREFERENTIAL";
+    resealSlot(
+      dossier,
+      S12 as SlotId,
+      "CORROBORATED",
+      payload,
+      attestationSpec("SOVEREIGN_AUTHORITY", "Chittagong Chamber / REX Portal", "BD-REX-PORTAL-2026")
+    );
+  });
+
+  assert.equal(result.sealsOk, true);
+  assert.deepEqual(result.uncorroborated, []);
+  assert.equal(result.verdict, "HARD_STOP");
+  assert.ok(result.codes.includes("ERR_SEMANTIC_ORIGIN_REGIME"));
+});
+
 test("7. Salted blind index collides across two banks despite formatting mutation", () => {
   const bankA = computeBlindIndex(
     NETWORK_REGISTRY_SALT_HEX,
-    "MAEU260984112",
+    "MSCU260984112",
     " mscu-582910-4 ",
     "bd-bin-004918273-0101",
     "2026-10-12"
   );
   const bankB = computeBlindIndex(
     NETWORK_REGISTRY_SALT_HEX,
-    " maeu260984112 ",
+    " mscu260984112 ",
     "MSCU5829104",
     "BDBIN0049182730101",
     "2026-10-12"
   );
 
-  assert.equal(bankA.normalizedTuple, "MAEU260984112|MSCU5829104|BDBIN0049182730101|2026-10-12");
+  assert.equal(bankA.normalizedTuple, "MSCU260984112|MSCU5829104|BDBIN0049182730101|2026-10-12");
   assert.equal(bankA.normalizedTuple, bankB.normalizedTuple);
   assert.equal(bankA.blindIndexHex, bankB.blindIndexHex);
   assert.match(bankA.blindIndexHex, /^[0-9a-f]{64}$/);
@@ -422,7 +621,7 @@ test("7. Salted blind index collides across two banks despite formatting mutatio
 
   const otherRegistry = computeBlindIndex(
     "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
-    "MAEU260984112",
+    "MSCU260984112",
     "MSCU5829104",
     "BDBIN0049182730101",
     "2026-10-12"
@@ -437,7 +636,7 @@ test("8. Single-byte tamper of L3.S09 is demoted and halts GATE_02", () => {
   assert.equal(labPayload.measured_cotton_pct, 99.4);
   labPayload.measured_cotton_pct = 99.5;
 
-  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
   const forged = evaluation.seal_verification.slots.find((slot) => slot.slot_id === S09);
   assert.ok(forged);
 
@@ -458,8 +657,8 @@ test("8. Single-byte tamper of L3.S09 is demoted and halts GATE_02", () => {
 
 test("9. Gate equations are deterministic across repeated evaluation", () => {
   const dossier = loadVector();
-  const first = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
-  const second = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const first = evaluateReleaseGates(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
+  const second = evaluateReleaseGates(dossier, MASTER_SECRET_HEX, dossier.reference_time, loadTrustStore());
   assert.deepEqual(first.gates, second.gates);
   assert.deepEqual(first.seal_verification, second.seal_verification);
   assert.equal(first.institutional_views.pre_wire_gate.verdict, "HARD_STOP");

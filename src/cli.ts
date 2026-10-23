@@ -1,7 +1,11 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
+  computeJcsSha256,
   evaluateReleaseGates,
+  isTrustedAttester,
+  verifyAttestationSignature,
+  type AttesterTrustStore,
   type GateEvaluationReport,
   type GateResult,
   type OOES18Dossier,
@@ -14,9 +18,14 @@ const MASTER_SECRET_HEX =
   "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
 
 const VECTOR_PATH = resolve(process.cwd(), "vectors", "CASCADE-2026-9F4A2C.dossier.json");
+const TRUST_PATH = resolve(process.cwd(), "trust", "attesters.json");
 
 function loadDossier(): OOES18Dossier {
   return JSON.parse(readFileSync(VECTOR_PATH, "utf8")) as OOES18Dossier;
+}
+
+function loadTrustStore(): AttesterTrustStore {
+  return JSON.parse(readFileSync(TRUST_PATH, "utf8")) as AttesterTrustStore;
 }
 
 function pad(value: string, width: number): string {
@@ -56,6 +65,14 @@ function printSlotTable(report: SealVerificationReport): void {
     );
   });
   console.log(separator);
+
+  const corroborated = report.slots.filter(
+    (slot) => slot.declared_state === "CORROBORATED"
+  );
+  const trusted = corroborated.filter((slot) => slot.attestation_trusted);
+  console.log(
+    `ATTESTATION TRUST: ${trusted.length}/${corroborated.length} CORROBORATED slots have a trusted Ed25519 attestation`
+  );
 
   const faulted = report.slots.filter((slot) => slot.fault_codes.length > 0);
   if (faulted.length > 0) {
@@ -139,7 +156,7 @@ function printEvaluation(evaluation: GateEvaluationReport): void {
 
 function printHeader(dossier: OOES18Dossier, evaluation: GateEvaluationReport): void {
   console.log("========================================================================");
-  console.log(" OOES-18 v1.0.0 :: OPEN ORIGIN EVIDENCE SCHEMA");
+  console.log(" OOES-18 v1.1.0 :: OPEN ORIGIN EVIDENCE SCHEMA");
   console.log(" A model reads. A compiled kernel decides.");
   console.log("========================================================================");
   console.log(` dossier_id        : ${dossier.dossier_id}`);
@@ -152,9 +169,71 @@ function printHeader(dossier: OOES18Dossier, evaluation: GateEvaluationReport): 
   console.log("");
 }
 
+function runVerifyAttestations(): number {
+  const dossier = loadDossier();
+  const trustStore = loadTrustStore();
+  let failures = 0;
+
+  console.log("========================================================================");
+  console.log(" OOES-18 v1.1.0 :: PUBLIC ATTESTATION VERIFICATION");
+  console.log(" Tenant master secret: NOT REQUIRED");
+  console.log("========================================================================");
+
+  for (const slot of Object.values(dossier.slots)) {
+    if (!slot.attestation || slot.payload === null) {
+      continue;
+    }
+    const payloadHash = computeJcsSha256(slot.payload);
+    const payloadMatch = slot.attestation.payload_jcs_sha256 === payloadHash;
+    const signatureValid = verifyAttestationSignature(
+      slot.slot_id,
+      payloadHash,
+      slot.attestation
+    );
+    const trusted = isTrustedAttester(
+      trustStore,
+      slot.attestation,
+      slot.slot_id,
+      dossier.reference_time
+    );
+    const ok =
+      payloadMatch &&
+      signatureValid &&
+      (slot.state !== "CORROBORATED" || trusted);
+    if (!ok) {
+      failures += 1;
+    }
+    const label = ok
+      ? slot.state === "CORROBORATED"
+        ? "TRUSTED"
+        : "SELF-DECLARED"
+      : "FAILED";
+    console.log(
+      `${slot.slot_id}: ${label} | payload ${
+        payloadMatch ? "MATCH" : "MISMATCH"
+      } | signature ${signatureValid ? "VALID" : "INVALID"} | trust ${
+        trusted ? "YES" : "NO"
+      }`
+    );
+  }
+
+  console.log("");
+  console.log(
+    failures === 0
+      ? "RESULT: all attestations verify; every CORROBORATED slot is backed by a trusted key."
+      : `RESULT: ${failures} attestation(s) failed public verification.`
+  );
+  return failures === 0 ? 0 : 1;
+}
+
 function runVerify(): number {
   const dossier = loadDossier();
-  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const evaluation = evaluateReleaseGates(
+    dossier,
+    MASTER_SECRET_HEX,
+    dossier.reference_time,
+    loadTrustStore()
+  );
   printHeader(dossier, evaluation);
   printSlotTable(evaluation.seal_verification);
   printEvaluation(evaluation);
@@ -164,15 +243,24 @@ function runVerify(): number {
 function runTamperDemo(): number {
   const dossier = loadDossier();
   const labSlot = dossier.slots["L3.S09_LAB_CERTIFICATE"];
-  if (!labSlot || !labSlot.payload || typeof labSlot.payload.azo_dyes_ppm !== "number") {
+  if (
+    !labSlot ||
+    !labSlot.payload ||
+    typeof labSlot.payload.measured_cotton_pct !== "number"
+  ) {
     console.error("Tamper demo requires a sealed L3.S09_LAB_CERTIFICATE payload.");
     return 1;
   }
 
-  const originalPpm = labSlot.payload.azo_dyes_ppm;
-  labSlot.payload.azo_dyes_ppm = 45.2;
+  const originalCotton = labSlot.payload.measured_cotton_pct;
+  labSlot.payload.measured_cotton_pct = 89.4;
 
-  const evaluation = evaluateReleaseGates(dossier, MASTER_SECRET_HEX);
+  const evaluation = evaluateReleaseGates(
+    dossier,
+    MASTER_SECRET_HEX,
+    dossier.reference_time,
+    loadTrustStore()
+  );
   const forged = evaluation.seal_verification.slots.find(
     (slot) => slot.slot_id === "L3.S09_LAB_CERTIFICATE"
   );
@@ -183,12 +271,12 @@ function runTamperDemo(): number {
   const gate2Halt = gate2.verdict === "HARD_STOP";
 
   console.log("========================================================================");
-  console.log(" OOES-18 v1.0.0 :: TAMPER DEMONSTRATION");
+  console.log(" OOES-18 v1.1.0 :: TAMPER DEMONSTRATION");
   console.log("========================================================================");
   console.log(` dossier_id              : ${dossier.dossier_id}`);
   console.log(` target slot             : L3.S09_LAB_CERTIFICATE`);
-  console.log(` original azo_dyes_ppm   : ${originalPpm}`);
-  console.log(` forged azo_dyes_ppm     : 45.2`);
+  console.log(` original cotton_pct     : ${originalCotton}`);
+  console.log(` forged cotton_pct       : 89.4`);
   console.log(` tenant master secret    : withheld from attacker`);
   console.log("");
 
@@ -226,9 +314,13 @@ const mode = process.argv[2] ?? "verify";
 
 if (mode === "verify") {
   process.exitCode = runVerify();
+} else if (mode === "verify-attestations") {
+  process.exitCode = runVerifyAttestations();
 } else if (mode === "tamper-demo") {
   process.exitCode = runTamperDemo();
 } else {
-  console.error(`Unknown mode "${mode}". Expected "verify" or "tamper-demo".`);
+  console.error(
+    `Unknown mode "${mode}". Expected "verify", "verify-attestations", or "tamper-demo".`
+  );
   process.exitCode = 2;
 }

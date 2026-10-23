@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 
 /**
- * OOES-18 v1.0.0 reference verifier.
+ * OOES-18 v1.1.0 reference verifier.
  *
  * A model reads. A compiled kernel decides.
  *
@@ -11,7 +11,7 @@ import crypto from "node:crypto";
  */
 
 export const STANDARD_ID = "OOES-18" as const;
-export const STANDARD_VERSION = "1.0.0" as const;
+export const STANDARD_VERSION = "1.1.0" as const;
 
 export const SLOT_IDS = [
   "L1.S01_PURCHASE_ORDER",
@@ -84,7 +84,26 @@ export interface AttestationMetadata {
   accreditation_id: string | null;
   attested_at: string;
   expires_at: string;
+  signature_algorithm: "Ed25519";
+  attester_public_key_hex: string;
+  payload_jcs_sha256: string;
   signature_hex: string;
+}
+
+export interface AttesterTrustEntry {
+  authority_name: string;
+  accreditation_id: string;
+  public_key_hex: string;
+  valid_from: string;
+  valid_until: string;
+  scopes: string[];
+}
+
+export interface AttesterTrustStore {
+  version: string;
+  test_only?: boolean;
+  note?: string;
+  attesters: AttesterTrustEntry[];
 }
 
 export interface SlotEnvelope {
@@ -127,6 +146,7 @@ export interface SlotSealReport {
   hmac_sha256_match: boolean;
   aes_gcm_authenticated: boolean;
   attestation_valid: boolean;
+  attestation_trusted: boolean;
   fault_codes: string[];
 }
 
@@ -364,6 +384,110 @@ export function computeSlotDigest(slotKey: Buffer, payload: unknown): string {
     .digest("hex");
 }
 
+const ED25519_SPKI_PREFIX = Buffer.from("302a300506032b6570032100", "hex");
+
+/**
+ * Canonical message signed by an attester.
+ *
+ * The signature binds the attester identity, accreditation, validity window,
+ * public key, and the JCS SHA-256 of the attested payload. A relying party can
+ * therefore verify that the attester signed this exact payload hash without
+ * possessing the tenant's HMAC master secret.
+ */
+export function attestationMessage(
+  slotId: string,
+  payloadJcsSha256: string,
+  metadata: AttestationMetadata
+): string {
+  return canonicalizeJCS({
+    slot_id: slotId,
+    payload_jcs_sha256: payloadJcsSha256,
+    attester_type: metadata.attester_type,
+    authority_name: metadata.authority_name,
+    accreditation_id: metadata.accreditation_id,
+    attested_at: metadata.attested_at,
+    expires_at: metadata.expires_at,
+    signature_algorithm: metadata.signature_algorithm,
+    attester_public_key_hex: metadata.attester_public_key_hex
+  });
+}
+
+/** Verify an Ed25519 attestation signature over the canonical message. */
+export function verifyAttestationSignature(
+  slotId: string,
+  payloadJcsSha256: string,
+  metadata: AttestationMetadata
+): boolean {
+  try {
+    const publicKey = crypto.createPublicKey({
+      key: Buffer.concat([
+        ED25519_SPKI_PREFIX,
+        assertHex(metadata.attester_public_key_hex, 32, "attester_public_key_hex")
+      ]),
+      format: "der",
+      type: "spki"
+    });
+    const signature = assertHex(metadata.signature_hex, 64, "signature_hex");
+    const message = Buffer.from(
+      attestationMessage(slotId, payloadJcsSha256, metadata),
+      UTF8
+    );
+    return crypto.verify(null, message, publicKey, signature);
+  } catch {
+    return false;
+  }
+}
+
+/** True when the attester key is in the relying party's trust store. */
+export function isTrustedAttester(
+  trustStore: AttesterTrustStore | undefined,
+  metadata: AttestationMetadata,
+  slotId: string,
+  referenceTime: string
+): boolean {
+  if (!trustStore || !Array.isArray(trustStore.attesters)) {
+    return false;
+  }
+  const reference = Date.parse(referenceTime);
+  if (!Number.isFinite(reference)) {
+    return false;
+  }
+  return trustStore.attesters.some((entry) => {
+    if (
+      typeof entry.authority_name !== "string" ||
+      typeof entry.accreditation_id !== "string" ||
+      typeof entry.public_key_hex !== "string" ||
+      !Array.isArray(entry.scopes)
+    ) {
+      return false;
+    }
+    if (entry.authority_name !== metadata.authority_name) {
+      return false;
+    }
+    if (entry.accreditation_id !== metadata.accreditation_id) {
+      return false;
+    }
+    if (entry.public_key_hex.toLowerCase() !== metadata.attester_public_key_hex.toLowerCase()) {
+      return false;
+    }
+    const validFrom = Date.parse(entry.valid_from);
+    const validUntil = Date.parse(entry.valid_until);
+    if (
+      !Number.isFinite(validFrom) ||
+      !Number.isFinite(validUntil) ||
+      reference < validFrom ||
+      reference > validUntil
+    ) {
+      return false;
+    }
+    return (
+      entry.scopes.length === 0 ||
+      entry.scopes.includes("*") ||
+      entry.scopes.includes(slotId)
+    );
+  });
+}
+
 /**
  * AES-256-GCM payload encryption at rest.
  *
@@ -500,7 +624,8 @@ function booleanOf(payload: Record<string, unknown> | null, key: string): boolea
 export function verifyDossierSeals(
   dossier: OOES18Dossier,
   masterSecretHex: string,
-  referenceTime: string = dossier.reference_time
+  referenceTime: string = dossier.reference_time,
+  trustStore?: AttesterTrustStore
 ): SealVerificationReport {
   const parsedReference = Date.parse(referenceTime);
   if (!Number.isFinite(parsedReference)) {
@@ -524,6 +649,7 @@ export function verifyDossierSeals(
         hmac_sha256_match: false,
         aes_gcm_authenticated: false,
         attestation_valid: false,
+        attestation_trusted: false,
         fault_codes: ["ERR_SLOT_MISSING"]
       });
       errors.push(`${slotId}: mandatory slot envelope is missing`);
@@ -537,6 +663,7 @@ export function verifyDossierSeals(
     let jcsMatch = false;
     let hmacMatch = false;
     let aesAuthenticated = false;
+    let payloadJcsSha = "";
 
     const demote = (code: string, detail?: string): void => {
       effectiveState = "UNKNOWN";
@@ -561,6 +688,7 @@ export function verifyDossierSeals(
         hmac_sha256_match: false,
         aes_gcm_authenticated: false,
         attestation_valid: declaredState === "UNKNOWN" && envelope.attestation === null,
+        attestation_trusted: false,
         fault_codes: faults
       });
       continue;
@@ -579,6 +707,7 @@ export function verifyDossierSeals(
         );
         const canonical = canonicalizeJCS(envelope.payload);
         const expectedJcsSha = sha256Hex(Buffer.from(canonical, UTF8));
+        payloadJcsSha = expectedJcsSha;
         const expectedHmac = computeSlotDigest(slotKey, envelope.payload);
 
         jcsMatch = expectedJcsSha === envelope.seal.jcs_sha256;
@@ -618,32 +747,79 @@ export function verifyDossierSeals(
       }
     }
 
+    let attestationTrusted = false;
     if (declaredState !== "UNKNOWN") {
       if (!envelope.attestation) {
         demote("ERR_ATTESTATION_MISSING", "sealed slot has no attestation metadata");
       } else {
-        const expiresAt = Date.parse(envelope.attestation.expires_at);
+        const attestation = envelope.attestation;
+        const expiresAt = Date.parse(attestation.expires_at);
         if (!Number.isFinite(expiresAt)) {
           demote("ERR_ATTESTATION_EXPIRED", "attestation expiry timestamp is invalid");
         } else if (expiresAt < parsedReference) {
           demote(
             "ERR_ATTESTATION_EXPIRED",
-            `attestation expired at ${envelope.attestation.expires_at}`
+            `attestation expired at ${attestation.expires_at}`
           );
         }
 
-        if (!/^[0-9a-f]{64}$/.test(envelope.attestation.signature_hex)) {
-          demote("ERR_ATTESTATION_SIGNATURE_INVALID", "attestation signature_hex is malformed");
+        if (attestation.signature_algorithm !== "Ed25519") {
+          demote(
+            "ERR_ATTESTATION_SIGNATURE_INVALID",
+            "attestation signature_algorithm must be Ed25519"
+          );
+        }
+
+        if (!/^[0-9a-f]{64}$/.test(attestation.attester_public_key_hex)) {
+          demote(
+            "ERR_ATTESTATION_SIGNATURE_INVALID",
+            "attester_public_key_hex must be 32 bytes of lowercase hexadecimal"
+          );
+        }
+
+        if (!/^[0-9a-f]{128}$/.test(attestation.signature_hex)) {
+          demote(
+            "ERR_ATTESTATION_SIGNATURE_INVALID",
+            "attestation signature_hex must be 64 bytes of lowercase hexadecimal"
+          );
+        }
+
+        if (attestation.payload_jcs_sha256 !== payloadJcsSha) {
+          demote(
+            "ERR_ATTESTATION_PAYLOAD_MISMATCH",
+            "attestation payload_jcs_sha256 does not match the sealed payload"
+          );
         }
 
         if (
+          !verifyAttestationSignature(slotId, payloadJcsSha, attestation)
+        ) {
+          demote(
+            "ERR_ATTESTATION_SIGNATURE_INVALID",
+            "Ed25519 attestation signature does not verify"
+          );
+        }
+
+        attestationTrusted = isTrustedAttester(
+          trustStore,
+          attestation,
+          slotId,
+          referenceTime
+        );
+
+        if (
           declaredState === "CORROBORATED" &&
-          (envelope.attestation.attester_type === "PARTY_SELF_DECLARATION" ||
-            !envelope.attestation.accreditation_id)
+          (attestation.attester_type === "PARTY_SELF_DECLARATION" ||
+            !attestation.accreditation_id)
         ) {
           demote(
             "ERR_ATTESTATION_ACCREDITATION_REQUIRED",
             "CORROBORATED requires an independent accredited attester"
+          );
+        } else if (declaredState === "CORROBORATED" && !attestationTrusted) {
+          demote(
+            "ERR_ATTESTATION_UNTRUSTED",
+            "CORROBORATED requires an attester key present in the relying party's trust store"
           );
         }
       }
@@ -659,6 +835,7 @@ export function verifyDossierSeals(
       hmac_sha256_match: hmacMatch,
       aes_gcm_authenticated: aesAuthenticated,
       attestation_valid: attestationValid,
+      attestation_trusted: attestationTrusted && attestationValid,
       fault_codes: faults
     });
   }
@@ -674,7 +851,7 @@ export function verifyDossierSeals(
   };
 }
 
-function haversineMeters(
+export function haversineMeters(
   lat1: number,
   lon1: number,
   lat2: number,
@@ -723,6 +900,19 @@ function evaluateStateRequirements(
         detail: "Attestation is outside its validity window; slot was demoted to UNKNOWN."
       });
     }
+    const attestationFaultDetails: Record<string, string> = {
+      ERR_ATTESTATION_SIGNATURE_INVALID:
+        "Ed25519 attestation signature is malformed or does not verify.",
+      ERR_ATTESTATION_PAYLOAD_MISMATCH:
+        "Attestation payload hash does not match the sealed payload.",
+      ERR_ATTESTATION_UNTRUSTED:
+        "Attester key is absent from the relying party's trust store."
+    };
+    for (const [code, detail] of Object.entries(attestationFaultDetails)) {
+      if (report?.fault_codes.includes(code)) {
+        haltReasons.push({ code, slot_id: slotId, detail });
+      }
+    }
     haltReasons.push({
       code: state === "ASSERTED" ? "ERR_SLOT_ASSERTED" : "ERR_SLOT_UNKNOWN",
       slot_id: slotId,
@@ -736,21 +926,36 @@ function evaluateStateRequirements(
   return { uncorroborated, haltReasons, states };
 }
 
-function addSemanticCheck(
+function addSemanticCheckRaw(
   checks: SemanticCheck[],
   haltReasons: HaltReason[],
   ruleId: string,
   sourceSlots: string[],
   status: SemanticStatus,
   detail: string,
-  failureCode?: string
+  failureCode: string | undefined,
+  effectiveStates: Map<string, EpistemicState>
 ): void {
-  checks.push({ rule_id: ruleId, source_slots: sourceSlots, status, detail });
-  if (status === "FAIL" && failureCode) {
+  let finalStatus = status;
+  let finalDetail = detail;
+  const uncorroboratedSources = sourceSlots.filter(
+    (slotId) => effectiveStates.get(slotId) !== "CORROBORATED"
+  );
+  if (finalStatus !== "NOT_EVALUATED" && uncorroboratedSources.length > 0) {
+    finalStatus = "NOT_EVALUATED";
+    finalDetail = `Source slot(s) not corroborated: ${uncorroboratedSources.join(", ")}.`;
+  }
+  checks.push({
+    rule_id: ruleId,
+    source_slots: sourceSlots,
+    status: finalStatus,
+    detail: finalDetail
+  });
+  if (finalStatus === "FAIL" && failureCode) {
     haltReasons.push({
       code: failureCode,
       slot_id: sourceSlots[0] ?? null,
-      detail
+      detail: finalDetail
     });
   }
 }
@@ -840,7 +1045,12 @@ function buildInstitutionalViews(
   let art30Detail = "Pre-shipment inspection report L5.S16 is not corroborated.";
   const poUnits = numberOf(s01, "total_units");
   const verifiedUnits = numberOf(s16, "verified_units_count");
-  if (poUnits !== null && verifiedUnits !== null && poUnits > 0) {
+  if (
+    poUnits !== null &&
+    verifiedUnits !== null &&
+    poUnits > 0 &&
+    effectiveStates.get("L5.S16_PSI_REPORT") === "CORROBORATED"
+  ) {
     const deviation = Math.abs(verifiedUnits - poUnits) / poUnits;
     if (deviation <= 0.05) {
       art30Status = "PASS";
@@ -850,11 +1060,6 @@ function buildInstitutionalViews(
       art30Detail = `Verified quantity deviates ${(deviation * 100).toFixed(2)}% from the PO, outside the UCP 600 Art. 30 5% tolerance.`;
     }
   }
-
-  const insuranceStatus: SemanticStatus =
-    s14 !== null && effectiveStates.get("L5.S14_LANDED_VALUATION") === "CORROBORATED"
-      ? "PASS"
-      : "NOT_EVALUATED";
 
   const lcChecks: LcCheck[] = [
     {
@@ -926,17 +1131,6 @@ function buildInstitutionalViews(
           ? "Origin country and exporter REX identifier are consistent across documents."
           : "Origin country or REX identifier consistency is not established."
     },
-    {
-      reference: "ISBP 821 Para. K1",
-      requirement:
-        "Insurance and freight charges added to the FOB value must be separately identifiable for CIF customs valuation.",
-      source_slots: ["L5.S14_LANDED_VALUATION"],
-      status: insuranceStatus,
-      detail:
-        insuranceStatus === "PASS"
-          ? "Freight and insurance additions are present and arithmetically reconciled."
-          : "Landed valuation slot is not corroborated."
-    }
   ];
 
   const lcOverall: LcMt700CheckView["overall"] = lcChecks.some(
@@ -1030,7 +1224,7 @@ function buildInstitutionalViews(
     },
     {
       de: "DE 14 03",
-      name: "Customs value and Incoterms addition/deduction breakdown",
+      name: "Customs value and Incoterms addition/deduction breakdown (UCC Art. 70/71)",
       source_slots: ["L5.S14_LANDED_VALUATION"],
       status: statusFor(["L5.S14_LANDED_VALUATION"]),
       values: {
@@ -1049,6 +1243,8 @@ function buildInstitutionalViews(
       values: {
         country_of_origin_iso2: stringOf(s12, "country_of_origin_iso2"),
         origin_criterion: stringOf(s12, "origin_criterion"),
+        origin_regime: stringOf(s12, "origin_regime"),
+        proof_type: stringOf(s12, "proof_type"),
         exporter_rex_id: stringOf(s12, "exporter_rex_id")
       }
     },
@@ -1104,15 +1300,42 @@ function buildInstitutionalViews(
 export function evaluateReleaseGates(
   dossier: OOES18Dossier,
   masterSecretHex: string,
-  referenceTime: string = dossier.reference_time
+  referenceTime: string = dossier.reference_time,
+  trustStore?: AttesterTrustStore
 ): GateEvaluationReport {
-  const sealVerification = verifyDossierSeals(dossier, masterSecretHex, referenceTime);
+  const sealVerification = verifyDossierSeals(
+    dossier,
+    masterSecretHex,
+    referenceTime,
+    trustStore
+  );
   const reportsById = new Map(
     sealVerification.slots.map((slot) => [slot.slot_id, slot] as const)
   );
   const effectiveStates = new Map<string, EpistemicState>(
     sealVerification.slots.map((slot) => [slot.slot_id, slot.effective_state] as const)
   );
+
+  const addSemanticCheck = (
+    checks: SemanticCheck[],
+    haltReasons: HaltReason[],
+    ruleId: string,
+    sourceSlots: string[],
+    status: SemanticStatus,
+    detail: string,
+    failureCode?: string
+  ): void => {
+    addSemanticCheckRaw(
+      checks,
+      haltReasons,
+      ruleId,
+      sourceSlots,
+      status,
+      detail,
+      failureCode,
+      effectiveStates
+    );
+  };
 
   const gate1Mandatory = [
     "L1.S01_PURCHASE_ORDER",
@@ -1244,6 +1467,7 @@ export function evaluateReleaseGates(
     "L1.S02_TECH_PACK",
     "L1.S03_GOLDEN_SAMPLE",
     "L2.S04_SUPPLIER_KYB",
+    "L2.S05_REGISTRY_STANDING",
     "L3.S07_PRODUCTION_PHOTOS",
     "L3.S08_INLINE_AQL",
     "L3.S09_LAB_CERTIFICATE",
@@ -1251,7 +1475,8 @@ export function evaluateReleaseGates(
     "L4.S11_BILL_OF_LADING",
     "L4.S12_CERTIFICATE_OF_ORIGIN",
     "L5.S14_LANDED_VALUATION",
-    "L5.S15_DUTY_CALCULATION"
+    "L5.S15_DUTY_CALCULATION",
+    "L5.S16_PSI_REPORT"
   ];
 
   const gate2StateResult = evaluateStateRequirements(
@@ -1296,6 +1521,59 @@ export function evaluateReleaseGates(
       distance <= 500 ? "PASS" : "FAIL",
       `Haversine distance between factory KYB coordinates and inline media EXIF coordinates is ${distance.toFixed(1)} m (limit 500 m).`,
       "ERR_SEMANTIC_GEOFENCE_DISTANCE"
+    );
+  }
+
+  const s10Lat = numberOf(s10, "stuffing_lat");
+  const s10Lon = numberOf(s10, "stuffing_lon");
+  const stuffingLocationType = stringOf(s10, "stuffing_location_type");
+  if (s10Lat === null || s10Lon === null) {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_GEOFENCE_S04_S10",
+      ["L2.S04_SUPPLIER_KYB", "L4.S10_BOLT_SEAL"],
+      "NOT_EVALUATED",
+      "Stuffing coordinates are unavailable in the bolt-seal slot."
+    );
+  } else if (stuffingLocationType === "PORT") {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_GEOFENCE_S04_S10",
+      ["L2.S04_SUPPLIER_KYB", "L4.S10_BOLT_SEAL"],
+      "NOT_EVALUATED",
+      "Port-side stuffing is declared; the factory geofence does not apply."
+    );
+  } else if (stuffingLocationType !== "FACTORY") {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_GEOFENCE_S04_S10",
+      ["L2.S04_SUPPLIER_KYB", "L4.S10_BOLT_SEAL"],
+      "FAIL",
+      "Stuffing location type is absent or not FACTORY/PORT.",
+      "ERR_SEMANTIC_STUFFING_GEOFENCE"
+    );
+  } else if (s04Lat === null || s04Lon === null) {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_GEOFENCE_S04_S10",
+      ["L2.S04_SUPPLIER_KYB", "L4.S10_BOLT_SEAL"],
+      "NOT_EVALUATED",
+      "Factory coordinates are unavailable for the stuffing geofence."
+    );
+  } else {
+    const distance = haversineMeters(s04Lat, s04Lon, s10Lat, s10Lon);
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_GEOFENCE_S04_S10",
+      ["L2.S04_SUPPLIER_KYB", "L4.S10_BOLT_SEAL"],
+      distance <= 500 ? "PASS" : "FAIL",
+      `Haversine distance between factory KYB coordinates and container stuffing coordinates is ${distance.toFixed(1)} m (limit 500 m).`,
+      "ERR_SEMANTIC_STUFFING_GEOFENCE"
     );
   }
 
@@ -1467,6 +1745,33 @@ export function evaluateReleaseGates(
     );
   }
 
+  const scacCode = stringOf(s11, "scac_code");
+  const blNumber = stringOf(s11, "bl_number");
+  if (scacCode === null || blNumber === null || s10Container === null) {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_CARRIER_CONSISTENCY_S10_S11",
+      ["L4.S10_BOLT_SEAL", "L4.S11_BILL_OF_LADING"],
+      "NOT_EVALUATED",
+      "Carrier code, bill-of-lading number, or container number is unavailable."
+    );
+  } else {
+    const prefixConsistent =
+      blNumber.startsWith(scacCode) && s10Container.startsWith(scacCode);
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_CARRIER_CONSISTENCY_S10_S11",
+      ["L4.S10_BOLT_SEAL", "L4.S11_BILL_OF_LADING"],
+      prefixConsistent ? "PASS" : "FAIL",
+      prefixConsistent
+        ? `SCAC ${scacCode} is consistent with B/L ${blNumber} and container ${s10Container}.`
+        : `Carrier mismatch: SCAC ${scacCode}, B/L ${blNumber}, container ${s10Container}.`,
+      "ERR_SEMANTIC_CARRIER_MISMATCH"
+    );
+  }
+
   const cleanOnBoard = booleanOf(s11, "clean_on_board");
   addSemanticCheck(
     gate2Semantics,
@@ -1505,9 +1810,105 @@ export function evaluateReleaseGates(
     );
   }
 
+  const originCriterion = stringOf(s12, "origin_criterion");
+  const tier2Origin = stringOf(s12, "tier2_yarn_origin_iso2");
+  const tier3Origin = stringOf(s12, "tier3_raw_material_origin_iso2");
+  if (originCriterion === "WO") {
+    if (tier2Origin === null || tier3Origin === null) {
+      addSemanticCheck(
+        gate2Semantics,
+        gate2HaltReasons,
+        "G2_ORIGIN_CRITERION_S12",
+        ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+        "NOT_EVALUATED",
+        "Wholly-obtained criterion requires tier-2 and tier-3 input origins."
+      );
+    } else {
+      const whollyObtained =
+        tier2Origin === s12Country && tier3Origin === s12Country;
+      addSemanticCheck(
+        gate2Semantics,
+        gate2HaltReasons,
+        "G2_ORIGIN_CRITERION_S12",
+        ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+        whollyObtained ? "PASS" : "FAIL",
+        whollyObtained
+          ? `Wholly-obtained criterion is consistent with domestic tier-2/tier-3 inputs (${tier2Origin}, ${tier3Origin}).`
+          : `Origin criterion WO conflicts with imported inputs: tier-2 ${tier2Origin}, tier-3 ${tier3Origin}, origin ${s12Country}.`,
+        "ERR_SEMANTIC_ORIGIN_CRITERION"
+      );
+    }
+  } else if (originCriterion === "CC" || originCriterion === "CTH") {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_ORIGIN_CRITERION_S12",
+      ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+      "PASS",
+      `Origin criterion ${originCriterion} permits the declared imported tier-2/tier-3 inputs.`
+    );
+  } else {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_ORIGIN_CRITERION_S12",
+      ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+      "NOT_EVALUATED",
+      `Origin criterion ${originCriterion ?? "absent"} is not in the recognised set.`
+    );
+  }
+
+  const proofType = stringOf(s12, "proof_type");
+  const originRegime = stringOf(s12, "origin_regime");
+  if (proofType === "REX_STATEMENT") {
+    const regimeConsistent =
+      originRegime === "PREFERENTIAL" && stringOf(s12, "exporter_rex_id") !== null;
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_ORIGIN_REGIME_S12",
+      ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+      regimeConsistent ? "PASS" : "FAIL",
+      regimeConsistent
+        ? "REX statement is declared under the preferential origin regime."
+        : "REX statement requires a preferential regime and an exporter REX identifier.",
+      "ERR_SEMANTIC_ORIGIN_REGIME"
+    );
+  } else if (proofType === "CHAMBER_CERTIFICATE") {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_ORIGIN_REGIME_S12",
+      ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+      originRegime === "NON_PREFERENTIAL" ? "PASS" : "FAIL",
+      originRegime === "NON_PREFERENTIAL"
+        ? "Chamber certificate is declared under the non-preferential regime."
+        : "Chamber certificate must be declared under the non-preferential regime.",
+      "ERR_SEMANTIC_ORIGIN_REGIME"
+    );
+  } else {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_ORIGIN_REGIME_S12",
+      ["L4.S12_CERTIFICATE_OF_ORIGIN"],
+      "NOT_EVALUATED",
+      "Origin proof type is absent or not CHAMBER_CERTIFICATE/REX_STATEMENT."
+    );
+  }
+
   const s05Rex = stringOf(s05, "rex_number");
   const s12Rex = stringOf(s12, "exporter_rex_id");
-  if (s05Rex === null || s12Rex === null) {
+  if (proofType !== "REX_STATEMENT") {
+    addSemanticCheck(
+      gate2Semantics,
+      gate2HaltReasons,
+      "G2_REX_S05_S12",
+      ["L2.S05_REGISTRY_STANDING", "L4.S12_CERTIFICATE_OF_ORIGIN"],
+      "NOT_EVALUATED",
+      "REX consistency applies only to a preferential REX statement on origin."
+    );
+  } else if (s05Rex === null || s12Rex === null) {
     addSemanticCheck(
       gate2Semantics,
       gate2HaltReasons,
@@ -1524,7 +1925,7 @@ export function evaluateReleaseGates(
       ["L2.S05_REGISTRY_STANDING", "L4.S12_CERTIFICATE_OF_ORIGIN"],
       s05Rex === s12Rex ? "PASS" : "FAIL",
       s05Rex === s12Rex
-        ? `REX identifier ${s05Rex} is consistent across registry and origin documents.`
+        ? `REX identifier ${s05Rex} is consistent across registry and REX statement.`
         : `REX mismatch: registry ${s05Rex} versus origin statement ${s12Rex}.`,
       "ERR_SEMANTIC_REX_MISMATCH"
     );

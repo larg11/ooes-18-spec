@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "test_only": true,
+  "note": "Test fixture only. These Ed25519 keys are derived from public labels and must not be used in production. A production trust store is maintained by the relying institution or an accreditation registry.",
+  "attesters": [
+    {
+      "authority_name": "DGFiP Chorus Pro (France)",
+      "accreditation_id": "FR-CHORUS-PRO-REG-75008",
+      "public_key_hex": "496890e1da6fa52c43babda10faf6a25200b01c8088c631255db50ce7dfb1df8",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L1.S01_PURCHASE_ORDER"
+      ]
+    },
+    {
+      "authority_name": "QIMA Limited",
+      "accreditation_id": "QIMA-ISO17020-2026-1188",
+      "public_key_hex": "59f424fb41d4c309df796bc0a8710a554ba9957fb8cf87752d30013361f69446",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L1.S02_TECH_PACK",
+        "L2.S06_CAPACITY_ATTESTATION"
+      ]
+    },
+    {
+      "authority_name": "SGS Bangladesh Ltd",
+      "accreditation_id": "SGS-17020-BD-0042",
+      "public_key_hex": "8141d3261f0ede07199e30841af27a93ed5f8bff8db75fcd656a9720f8009734",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L1.S03_GOLDEN_SAMPLE",
+        "L3.S07_PRODUCTION_PHOTOS",
+        "L3.S08_INLINE_AQL",
+        "L4.S10_BOLT_SEAL",
+        "L5.S16_PSI_REPORT"
+      ]
+    },
+    {
+      "authority_name": "Bangladesh RJSC / NBR",
+      "accreditation_id": "BD-RJSC-REG-4419",
+      "public_key_hex": "ed104f83cc507e26905b557f159ec547da09850cc3428f459a6b3789d18beabe",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L2.S04_SUPPLIER_KYB"
+      ]
+    },
+    {
+      "authority_name": "BGMEA REX Registry API",
+      "accreditation_id": "BD-REX-API-882190",
+      "public_key_hex": "348646d494964c488f41e071d8ff33bae09ced666dd4425bef3a176a0a5fc3a2",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L2.S05_REGISTRY_STANDING"
+      ]
+    },
+    {
+      "authority_name": "Bureau Veritas CPS Dhaka",
+      "accreditation_id": "BV-ISO17025-BD-0427",
+      "public_key_hex": "2b5e8628c1b928bc078cce29a970cf51f3c8ce0a6735f0bf421e4c155dcd63ef",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L3.S09_LAB_CERTIFICATE"
+      ]
+    },
+    {
+      "authority_name": "MSC eBL Registry",
+      "accreditation_id": "MSCU-EBL-REG-2026",
+      "public_key_hex": "b3cec16309b945531fff6172a7ca19b3505716de391a1afe6971d0fccf9ed65d",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L4.S11_BILL_OF_LADING"
+      ]
+    },
+    {
+      "authority_name": "Chittagong Chamber / REX Portal",
+      "accreditation_id": "BD-REX-PORTAL-2026",
+      "public_key_hex": "bcdcf98cea80cc9a6cc7b2639f1219a64f01a6289c01ed094f2dd73c2596531a",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L4.S12_CERTIFICATE_OF_ORIGIN"
+      ]
+    },
+    {
+      "authority_name": "French Customs Valuation API",
+      "accreditation_id": "FR-DOUANE-VAL-2026",
+      "public_key_hex": "5776e04dff3778b5dc7765d03a95017e62f1e377e5e96945d1657269e4782d85",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L5.S14_LANDED_VALUATION"
+      ]
+    },
+    {
+      "authority_name": "French Customs TARIC API",
+      "accreditation_id": "FR-DOUANE-TARIC-2026",
+      "public_key_hex": "f0c62be78ebe155a16ddb4ef87c44849792459dfdb07fdfdf96034cb635fdd7c",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2027-12-31T23:59:59Z",
+      "scopes": [
+        "L5.S15_DUTY_CALCULATION"
+      ]
+    }
+  ]
+}
