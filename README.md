@@ -167,8 +167,8 @@ The tenant HMAC seal and the attester signature serve different purposes. The HM
 │   └── ooes-18.schema.json                  Draft 2020-12, strict, 18 slot payloads
 ├── spec/
 │   ├── OOES-18-Specification-v1.1.md        Full technical specification
-│   ├── OOES-18-Paper.tex                    4-page two-column SSRN preprint source
-│   └── OOES-18-Paper.pdf                    Compiled 4-page preprint
+│   ├── OOES-18-Paper-v1.1.0.tex            4-page two-column SSRN preprint source
+│   └── OOES-18-Paper-v1.1.0.pdf            Compiled 4-page preprint
 ├── src/
 │   ├── verifier.ts                          Deterministic kernel with Ed25519 attestation verification
 │   ├── seal-vector.ts                       Deterministic vector and trust-store generator
