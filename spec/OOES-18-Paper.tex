@@ -93,7 +93,7 @@ A dossier is $D=(tenant, dossier, t_{\mathrm{ref}}, salt, \{s_1,\dots,s_{18}\}, 
 \caption{The OOES-18 five-layer, eighteen-slot evidence model. Required payload fields are normative; the JSON Schema closes every payload object.}
 \label{tab:slots}
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}p{1.35cm}p{3.25cm}p{12.55cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.35cm}>{\raggedright\arraybackslash}p{3.25cm}>{\raggedright\arraybackslash}p{12.3cm}@{}}
 \toprule
 Slot & Canonical name & Required semantic payload fields \\
 \midrule
@@ -211,8 +211,8 @@ where $\parallel$ denotes direct concatenation and $\backslash n$ is the literal
 Shipment identity normalizes to
 \begin{equation}
 \begin{aligned}
-N={}&\mathrm{Upper}(\mathrm{Trim}(BL))\;\|\;\mathrm{Compact}(CTR)\\
-&\|\;\mathrm{Compact}(TIN)\;\|\;\mathrm{ISO}(DATE),
+N={}&\mathrm{Upper}(\mathrm{Trim}(BL))\;\|\;\texttt{"|"}\;\|\;\mathrm{Compact}(CTR)\\
+&\|\;\texttt{"|"}\;\|\;\mathrm{Compact}(TIN)\;\|\;\texttt{"|"}\;\|\;\mathrm{ISO}(DATE),
 \end{aligned}
 \end{equation}
 where $\mathrm{Compact}$ removes all whitespace and hyphens and uppercases the result, and $\mathrm{ISO}(DATE)$ is \code{YYYY-MM-DD}. The collision token is
@@ -247,7 +247,7 @@ The \code{lc_mt700_check} view maps the same evidence to a pre-presentation disc
 \caption{View B: UCP 600 / ISBP 821 mapping.}
 \label{tab:ucp}
 \setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}p{2.15cm}p{5.95cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.15cm}>{\raggedright\arraybackslash}p{5.95cm}@{}}
 \toprule
 Reference & OOES-18 check and sources \\
 \midrule
@@ -271,7 +271,7 @@ The \code{delta_ie_h1_pack} view maps slots to UCC Annex B and DELTA IE H1 data 
 \caption{View C: French DGDDI DELTA IE H1 data elements.}
 \label{tab:delta}
 \setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}p{1.65cm}p{2.35cm}p{4.1cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.65cm}>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{3.95cm}@{}}
 \toprule
 DE & Element & OOES-18 source \\
 \midrule
