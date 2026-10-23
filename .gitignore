@@ -3,6 +3,7 @@ dist/
 *.tsbuildinfo
 .DS_Store
 Thumbs.db
+.workbuddy-ai/
 spec/*.aux
 spec/*.log
 spec/*.out
