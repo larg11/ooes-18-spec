@@ -1,0 +1,42 @@
+{
+  "title": "OOES-18: An Open Deterministic Evidence Schema for EU Regulation 2024/3015 and French DELTA IE (H1) Pre-Clearance",
+  "description": "OOES-18 is an open, deterministic evidence schema for cross-border manufacturing orders. It defines 18 evidentiary slots across five layers, a three-valued epistemic lattice (UNKNOWN, ASSERTED, CORROBORATED), two deterministic release gates, Ed25519 attestation signatures with a relying-party trust store, and a salted blind-index protocol for cross-tenant duplicate-pledge detection. The repository contains the specification, Draft 2020-12 JSON Schema, deterministic test vector, TypeScript reference verifier, 17-test suite, and test trust store. The written specification is licensed CC-BY-4.0; the schema, code, tests, vector, and trust store are licensed Apache-2.0.",
+  "creators": [
+    {
+      "name": "Anwaruzzaman, Mohammad",
+      "orcid": "0009-0004-5697-7634",
+      "affiliation": "First Order Technologies SAS"
+    }
+  ],
+  "keywords": [
+    "OOES-18",
+    "EU Regulation 2024/3015",
+    "forced labour",
+    "DELTA IE H1",
+    "UCP 600",
+    "ISBP 821",
+    "customs pre-clearance",
+    "trade finance",
+    "deterministic verification",
+    "Ed25519",
+    "RFC 8785",
+    "RFC 5869",
+    "blind index",
+    "duplicate pledge"
+  ],
+  "license": "Apache-2.0",
+  "version": "1.1.0",
+  "publication_date": "2026-10-23",
+  "upload_type": "software",
+  "access_right": "open",
+  "language": "eng",
+  "notes": "The written specification (README.md and spec/) is CC-BY-4.0. The schema, test vector, reference verifier, tests, and test trust store are Apache-2.0. The test trust store contains public test keys only and must not be used in production.",
+  "related_identifiers": [
+    {
+      "identifier": "10.2139/ssrn.6661398",
+      "relation": "isSupplementedBy",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    }
+  ]
+}

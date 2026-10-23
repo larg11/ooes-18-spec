@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use OOES-18, please cite this repository and the companion DS-PR412 paper."
+title: "OOES-18: An Open Deterministic Evidence Schema for EU Regulation 2024/3015 and French DELTA IE (H1) Pre-Clearance"
+abstract: "OOES-18 is an open, deterministic evidence schema for cross-border manufacturing orders. It defines 18 evidentiary slots across five layers, a three-valued epistemic lattice, two deterministic release gates, Ed25519 attestation signatures with a relying-party trust store, and a salted blind-index protocol for cross-tenant duplicate-pledge detection. The repository contains the specification, JSON Schema, deterministic test vector, TypeScript reference verifier, and test suite."
+authors:
+  - family-names: Anwaruzzaman
+    given-names: Mohammad
+    orcid: "https://orcid.org/0009-0004-5697-7634"
+    affiliation: "First Order Technologies SAS"
+version: "1.1.0"
+date-released: "2026-10-23"
+license: "Apache-2.0"
+repository-code: "https://github.com/larg11/ooes-18-spec"
+url: "https://github.com/larg11/ooes-18-spec"
+keywords:
+  - "OOES-18"
+  - "EU Regulation 2024/3015"
+  - "DELTA IE H1"
+  - "UCP 600"
+  - "customs pre-clearance"
+  - "trade finance"
+  - "deterministic verification"
+  - "Ed25519"
+  - "blind index"
+references:
+  - type: article
+    title: "First-Order Manufacturing Failure in Small-Firm International Sourcing: A Practice-Derived Cascade Model from 412 Cases (DS-PR412, 2011-2024)"
+    authors:
+      - family-names: Anwaruzzaman
+        given-names: Mohammad
+    year: 2026
+    doi: "10.2139/ssrn.6661398"
